@@ -1,0 +1,250 @@
+{
+  "usage_history": {
+    "Chok": [
+      {
+        "page": "overview",
+        "pageLabel": "Visão Geral",
+        "timestamp": "2026-03-14T09:08:28.769Z",
+        "duration": 13,
+        "id": 1773479308769
+      },
+      {
+        "page": "profile",
+        "pageLabel": "Perfil",
+        "timestamp": "2026-03-14T09:08:30.531Z",
+        "duration": 2,
+        "id": 1773479310531
+      },
+      {
+        "page": "qr-mobile",
+        "pageLabel": "qr-mobile",
+        "timestamp": "2026-03-14T09:08:32.877Z",
+        "duration": 2,
+        "id": 1773479312877
+      },
+      {
+        "page": "overview",
+        "pageLabel": "Visão Geral",
+        "timestamp": "2026-03-14T09:08:38.646Z",
+        "duration": 3,
+        "id": 1773479318646
+      },
+      {
+        "page": "overview",
+        "pageLabel": "Visão Geral",
+        "timestamp": "2026-03-14T09:12:05.011Z",
+        "duration": 8,
+        "id": 1773479525011
+      },
+      {
+        "page": "notes",
+        "pageLabel": "Notas",
+        "timestamp": "2026-03-14T09:14:17.660Z",
+        "duration": 2,
+        "id": 1773479657660
+      },
+      {
+        "timestamp": "2026-03-14T09:15:52.277Z",
+        "duration": 227,
+        "id": 1773479752277
+      }
+    ]
+  },
+  "transactions": [
+    {
+      "id": "mmbtuc3tc1u0749mzdu",
+      "desc": "nada",
+      "amount": 2,
+      "type": "income",
+      "category": "alimentacao",
+      "date": "2026-03-04"
+    },
+    {
+      "id": "mmbtm9bgreiyb8y7r4o",
+      "desc": "comida",
+      "amount": 100,
+      "type": "income",
+      "category": "alimentacao",
+      "date": "2026-03-04"
+    }
+  ],
+  "tasks": [
+    {
+      "id": "mmbtus88rrhdy3qm1ni",
+      "text": "Varrer",
+      "priority": "normal",
+      "done": false,
+      "date": "04/03/2026"
+    },
+    {
+      "id": "mmbtos1kjkqf3cv3tbr",
+      "text": "saa",
+      "priority": "alta",
+      "done": true,
+      "date": "04/03/2026"
+    }
+  ],
+  "login_logs": [
+    {
+      "username": "Chok",
+      "timestamp": "2026-03-14T09:16:19.525Z",
+      "success": true,
+      "isAdmin": true
+    },
+    {
+      "username": "Chok",
+      "timestamp": "2026-03-14T09:14:03.610Z",
+      "success": true,
+      "isAdmin": true
+    },
+    {
+      "username": "Chok",
+      "timestamp": "2026-03-14T09:11:59.541Z",
+      "success": true,
+      "isAdmin": true
+    },
+    {
+      "username": "Chok",
+      "timestamp": "2026-03-14T09:08:18.377Z",
+      "success": true,
+      "isAdmin": true
+    },
+    {
+      "username": "Chok",
+      "timestamp": "2026-03-14T09:03:46.312Z",
+      "success": true,
+      "isAdmin": true
+    },
+    {
+      "username": "Chok",
+      "timestamp": "2026-03-14T08:44:27.703Z",
+      "success": true,
+      "isAdmin": true
+    },
+    {
+      "username": "Chok",
+      "timestamp": "2026-03-14T08:44:05.770Z",
+      "success": true,
+      "isAdmin": true
+    },
+    {
+      "username": "Chok",
+      "timestamp": "2026-03-04T10:04:02.008Z",
+      "success": true,
+      "isAdmin": true
+    },
+    {
+      "username": "wed",
+      "timestamp": "2026-03-04T10:02:30.226Z",
+      "success": true,
+      "isAdmin": false
+    },
+    {
+      "username": "wed",
+      "timestamp": "2026-03-04T10:00:36.834Z",
+      "success": true,
+      "isAdmin": false
+    },
+    {
+      "username": "Chok",
+      "timestamp": "2026-03-04T10:00:04.213Z",
+      "success": true,
+      "isAdmin": true
+    },
+    {
+      "username": "Chok",
+      "timestamp": "2026-03-04T09:54:57.537Z",
+      "success": true,
+      "isAdmin": true
+    },
+    {
+      "username": "Chok",
+      "timestamp": "2026-03-04T09:54:21.608Z",
+      "success": true,
+      "isAdmin": true
+    },
+    {
+      "username": "Chok",
+      "timestamp": "2026-03-04T09:46:36.204Z",
+      "success": true,
+      "isAdmin": true
+    },
+    {
+      "username": "Chok",
+      "timestamp": "2026-03-04T09:45:08.074Z",
+      "success": true,
+      "isAdmin": true
+    },
+    {
+      "username": "Chok",
+      "timestamp": "2026-03-04T09:20:23.967Z",
+      "success": true,
+      "isAdmin": true
+    },
+    {
+      "username": "Chok",
+      "timestamp": "2026-03-04T09:18:11.796Z",
+      "success": true,
+      "isAdmin": true
+    },
+    {
+      "username": "Chok",
+      "timestamp": "2026-03-04T09:07:46.301Z",
+      "success": true,
+      "isAdmin": true
+    },
+    {
+      "username": "Chok",
+      "timestamp": "2026-03-04T09:05:53.423Z",
+      "success": true,
+      "isAdmin": true
+    }
+  ],
+  "dark": false,
+  "users_database": {
+    "users": [
+      {
+        "id": 1,
+        "username": "Chok",
+        "usernameHash": "0c6c5efae907d6fda4ab9f05ac4eb30ff9f503cc74da2fb71d796783122dfb4d",
+        "passHash": "3dcea10c0d84d33677896e33c0c05e0f91d8c38ea8059944a87f52be2162d2c3",
+        "isAdmin": true,
+        "createdAt": "2026-03-14T08:43:51.372Z"
+      }
+    ]
+  },
+  "support_messages": [
+    {
+      "id": 1772615504652,
+      "username": "Chok",
+      "message": "Quero excluir minha conta",
+      "timestamp": "2026-03-04T09:11:44.652Z",
+      "type": "user"
+    },
+    {
+      "id": 1772615505454,
+      "username": "Bot Aphaday",
+      "message": "Como posso ajudá-lo?",
+      "timestamp": "2026-03-04T09:11:45.453Z",
+      "type": "bot"
+    },
+    {
+      "id": 1772615522626,
+      "username": "Chok",
+      "message": "Excluir minha conta",
+      "timestamp": "2026-03-04T09:12:02.626Z",
+      "type": "user"
+    },
+    {
+      "id": 1772615523427,
+      "username": "Bot Aphaday",
+      "message": "Como posso ajudá-lo?",
+      "timestamp": "2026-03-04T09:12:03.426Z",
+      "type": "bot"
+    }
+  ],
+  "last_sync_time": "2026-03-14T09:17:14.174Z",
+  "auth_recovery": {
+    "hash": "e416b26c5000273d780dd9b82e7c60f26c6707379eca8a7f6c04eab6111023df"
+  }
+}

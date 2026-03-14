@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Suporte - Aphaday</title>
+  <style>
+    *, *::before, *::after { 
+      box-sizing: border-box; 
+      margin: 0; 
+      padding: 0; 
+    }
+
+    :root {
+      --bg: #0e0e0d;
+      --surface: #18181a;
+      --surface-2: #1f1f21;
+      --border: #2a2a2e;
+      --border-2: #232326;
+      --text: #f4f4f5;
+      --text-2: #d4d4d8;
+      --text-muted: #52525b;
+      --green: #4ade80;
+      --green-2: #22c55e;
+      --green-bg: #052e16;
+      --green-border: #14532d;
+      --red: #f87171;
+      --accent: #f4f4f5;
+      --radius: 12px;
+      --radius-sm: 8px;
+      --transition: 0.18s ease;
+    }
+
+    [data-theme="light"] {
+      --bg: #f4f4f0;
+      --surface: #ffffff;
+      --surface-2: #f9f9f7;
+      --border: #e6e6e0;
+      --border-2: #ededea;
+      --text: #18181b;
+      --text-2: #3f3f46;
+      --text-muted: #a1a19a;
+      --green: #16a34a;
+      --green-2: #15803d;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      font-size: 14px;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .support-container {
+      display: flex;
+      height: 100vh;
+      max-width: 1400px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    /* ── Header ──────────────────────────────────────── */
+    .support-header {
+      padding: 24px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--surface);
+    }
+
+    .header-title {
+      font-size: 20px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .header-back {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 14px;
+      padding: 8px 12px;
+      transition: color var(--transition);
+      border-radius: var(--radius-sm);
+    }
+
+    .header-back:hover {
+      color: var(--text);
+      background: var(--surface-2);
+    }
+
+    .header-back[href*="wa.me"] {
+      background: #25d366 !important;
+      color: white !important;
+      transition: all var(--transition);
+      padding: 10px 14px !important;
+      border-radius: var(--radius-sm);
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .header-back[href*="wa.me"]:hover {
+      background: #1faa56 !important;
+      transform: scale(1.05);
+    }
+
+    /* ── Main Content ────────────────────────────────── */
+    .support-content {
+      display: flex;
+      flex: 1;
+      gap: 24px;
+      padding: 24px;
+      overflow: hidden;
+    }
+
+    .faq-section {
+      flex: 0 0 320px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .faq-header {
+      padding: 16px;
+      border-bottom: 1px solid var(--border);
+      font-weight: 600;
+      font-size: 13px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .faq-list {
+      overflow-y: auto;
+      flex: 1;
+    }
+
+    .faq-item {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border-2);
+      cursor: pointer;
+      transition: all var(--transition);
+      color: var(--text-2);
+      font-size: 13px;
+      line-height: 1.4;
+    }
+
+    .faq-item:hover {
+      background: var(--surface-2);
+      color: var(--text);
+      padding-left: 20px;
+    }
+
+    .faq-item.active {
+      background: var(--green-bg);
+      border-left: 3px solid var(--green);
+      color: var(--green);
+      padding-left: 13px;
+    }
+
+    /* ── Chat Section ────────────────────────────────── */
+    .chat-section {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+
+    .chat-header {
+      padding: 16px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .chat-header-info h3 {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+
+    .chat-header-info p {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .bot-badge {
+      width: 8px;
+      height: 8px;
+      background: var(--green);
+      border-radius: 50%;
+    }
+
+    .chat-messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .message {
+      display: flex;
+      gap: 10px;
+      animation: slideIn 0.3s ease-out;
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .message.bot {
+      align-self: flex-start;
+    }
+
+    .message.user {
+      align-self: flex-end;
+      gap: 10px;
+      flex-direction: row-reverse;
+    }
+
+    .message-content {
+      max-width: 70%;
+      padding: 10px 14px;
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      line-height: 1.5;
+      word-wrap: break-word;
+    }
+
+    .message.bot .message-content {
+      background: var(--surface-2);
+      color: var(--text);
+    }
+
+    .message.user .message-content {
+      background: var(--green);
+      color: #000;
+      font-weight: 500;
+    }
+
+    .message-avatar {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      flex-shrink: 0;
+      font-weight: 600;
+    }
+
+    .message.bot .message-avatar {
+      background: var(--green-bg);
+      color: var(--green);
+      border: 1px solid var(--green-border);
+    }
+
+    .message.user .message-avatar {
+      background: var(--green);
+      color: #000;
+    }
+
+    .typing-indicator {
+      display: flex;
+      gap: 4px;
+      padding: 10px 14px;
+      background: var(--surface-2);
+      border-radius: var(--radius-sm);
+      width: fit-content;
+    }
+
+    .typing-dot {
+      width: 4px;
+      height: 4px;
+      background: var(--text-muted);
+      border-radius: 50%;
+      animation: typing 1.4s infinite;
+    }
+
+    .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+    .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+    @keyframes typing {
+      0%, 60%, 100% { opacity: 0.5; }
+      30% { opacity: 1; }
+    }
+
+    /* ── Chat Input ──────────────────────────────────── */
+    .chat-footer {
+      padding: 16px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      gap: 8px;
+    }
+
+    .chat-input-wrap {
+      display: flex;
+      gap: 8px;
+      flex: 1;
+    }
+
+    .chat-input {
+      flex: 1;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 10px 14px;
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      font-family: inherit;
+      transition: all var(--transition);
+    }
+
+    .chat-input:focus {
+      outline: none;
+      border-color: var(--green);
+      background: var(--bg);
+    }
+
+    .chat-input::placeholder {
+      color: var(--text-muted);
+    }
+
+    .send-btn {
+      background: var(--green);
+      border: none;
+      color: #000;
+      width: 36px;
+      height: 36px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all var(--transition);
+      font-weight: 600;
+    }
+
+    .send-btn:hover {
+      background: var(--green-2);
+      transform: scale(1.05);
+    }
+
+    .send-btn:active {
+      transform: scale(0.95);
+    }
+
+    .send-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    /* ── Suggestions ─────────────────────────────────── */
+    .suggestions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      padding: 12px 0 0 40px;
+    }
+
+    .suggestion-btn {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      color: var(--text-2);
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      cursor: pointer;
+      transition: all var(--transition);
+    }
+
+    .suggestion-btn:hover {
+      background: var(--border);
+      color: var(--text);
+      border-color: var(--border);
+    }
+
+    /* ── Responsive ──────────────────────────────────── */
+    @media (max-width: 768px) {
+      .support-content {
+        flex-direction: column;
+      }
+
+      .faq-section {
+        flex: 0 0 auto;
+        max-height: 200px;
+      }
+
+      .chat-section {
+        flex: 1;
+      }
+
+      .message-content {
+        max-width: 90%;
+      }
+    }
+
+    ::-webkit-scrollbar { width: 5px; height: 5px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 99px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+  </style>
+</head>
+<body>
+
+<div class="support-container">
+  <div style="display: flex; flex-direction: column; width: 100%;">
+    <!-- Header -->
+    <div class="support-header">
+      <div class="header-title">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
+        <span>Central de Suporte</span>
+      </div>
+      <div style="display: flex; gap: 8px;">
+        <a href="https://wa.me/5579981570034?text=Olá!%20Preciso%20de%20suporte%20no%20Aphaday" target="_blank" class="header-back" style="background: #25d366; color: white; text-decoration: none; display: flex; align-items: center; gap: 6px;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          WhatsApp
+        </a>
+        <button class="header-back" onclick="window.history.back()">← voltar</button>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="support-content">
+      <!-- FAQ Section -->
+      <div class="faq-section">
+        <div class="faq-header">Perguntas Frequentes</div>
+        <div class="faq-list" id="faq-list">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+
+      <!-- Chat Section -->
+      <div class="chat-section">
+        <div class="chat-header">
+          <div class="bot-badge"></div>
+          <div class="chat-header-info">
+            <h3>Bot de Suporte</h3>
+            <p>Online • Sempre pronto para ajudar</p>
+          </div>
+        </div>
+
+        <div class="chat-messages" id="chat-messages">
+          <div class="message bot">
+            <div class="message-avatar">🤖</div>
+            <div class="message-content">
+              Olá! Bem-vindo ao suporte Aphaday. Como posso ajudá-lo hoje? 😊<br><br>
+              <strong style="color: var(--green);">💡 Dica:</strong> Se precisar falar com o proprietário, clique no botão <strong>WhatsApp</strong> no topo da página!
+              <div class="suggestions" id="initial-suggestions">
+                <!-- Populated by JS -->
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="chat-footer">
+          <div class="chat-input-wrap">
+            <input type="text" class="chat-input" id="chat-input" placeholder="Digite sua pergunta aqui...">
+            <button class="send-btn" id="send-btn">→</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ═══════════════════════════════════════════════════════════════════════════
+  // 🤖 BOT AUTOMATIZADO INTELIGENTE PARA SUPORTE APHADAY
+  // ═══════════════════════════════════════════════════════════════════════════
+
+  // Expandir base de conhecimento com mais respostas
+  const knowledgeBase = {
+    "Como faço para registrar uma nova conta?": {
+      response: "Para registrar uma nova conta, clique em 'registrar' na tela de login. Insira um nome de usuário, crie uma senha (mínimo 4 caracteres) e confirme a senha. Pronto! Sua conta estará criada.",
+      keywords: ["registrar", "conta", "novo usuário", "signup", "criar conta"],
+      category: "Conta"
+    },
+    "Esqueci minha senha, como recupero?": {
+      response: "Se esqueceu a senha, clique em 'esqueceu a senha?' na tela de login. Você precisará inserir seu código secreto de recuperação. Se não tiver o código, entre em contato com o administrador do sistema.",
+      keywords: ["senha", "recuperar", "esqueci", "reset", "perdida"],
+      category: "Segurança"
+    },
+    "Como alterar minhas credenciais?": {
+      response: "Após fazer login, procure pelas configurações (geralmente no menu lateral ou ícone de perfil). Lá você encontrará a opção 'alterar credenciais' onde pode atualizar seu usuário e senha.",
+      keywords: ["alterar", "credenciais", "mudar", "configurações", "perfil"],
+      category: "Conta"
+    },
+    "Para que serve a aba 'Visão Geral'?": {
+      response: "A 'Visão Geral' é seu dashboard principal. Aqui você vê um resumo de todas as suas atividades, tarefas pendentes, situação financeira e anotações rápidas tudo em um só lugar.",
+      keywords: ["visão geral", "dashboard", "overview", "página inicial", "início"],
+      category: "Funcionalidades"
+    },
+    "Como criar uma nova tarefa?": {
+      response: "Vá para a aba 'Tarefas', clique no botão '+' ou 'nova tarefa'. Preencha o título, descrição, defina a prioridade e data de vencimento. Salve para adicionar à sua lista.",
+      keywords: ["tarefa", "criar", "novo", "todo", "task"],
+      category: "Tarefas"
+    },
+    "Como rastrear minhas finanças?": {
+      response: "Use a aba 'Finanças' para adicionar receitas e despesas. Você pode categorizar suas transações, definir orçamentos e visualizar gráficos para acompanhar seus gastos ao longo do tempo.",
+      keywords: ["finanças", "dinheiro", "despesa", "receita", "orçamento", "gasto"],
+      category: "Finanças"
+    },
+    "Posso exportar meus dados?": {
+      response: "No momento, os dados são armazenados localmente. Em breve implementaremos a função de exportação em diferentes formatos (PDF, CSV, etc). Fique atento às atualizações!",
+      keywords: ["exportar", "backup", "download", "dados", "salvar"],
+      category: "Dados"
+    },
+    "Como usar a aba de Notas?": {
+      response: "A aba 'Notas' permite você criar anotações rápidas, lembretes e documentos. Organize por categorias, use tags para facilitar a busca e sincronize suas anotações entre dispositivos.",
+      keywords: ["notas", "anotações", "lembretes", "documentos", "note"],
+      category: "Notas"
+    },
+    "O app funciona offline?": {
+      response: "Sim! O Aphaday possui suporte offline. Todos os seus dados são salvos localmente no navegador (cache), então você pode trabalhar sem conexão de internet. Alterações serão sincronizadas quando reconectar.",
+      keywords: ["offline", "sem internet", "cache", "sincronizar", "conexão"],
+      category: "Técnico"
+    },
+    "Como ativar o modo escuro/claro?": {
+      response: "Procure pelo ícone de tema (geralmente um ícone de lua/sol) no menu! Você pode alternar entre modo escuro e modo claro conforme sua preferência. A escolha é salva automaticamente.",
+      keywords: ["tema", "escuro", "claro", "dark mode", "light mode", "mode"],
+      category: "Aparência"
+    },
+    "Há algum custo para usar?": {
+      response: "O Aphaday é totalmente gratuito! É um aplicativo de código aberto desenvolvido para ajudar você a organizar sua vida. Não há taxas ocultas ou planos pagos.",
+      keywords: ["custo", "preço", "gratuito", "pago", "premium", "taxa"],
+      category: "Informações"
+    },
+    "Como faço para excluir minha conta?": {
+      response: "Para deletar sua conta permanentemente, vá para a aba 'Perfil' e desça até a seção 'ZONA DE PERIGO'. Clique em 'deletar minha conta' e siga as instruções. ⚠️ ATENÇÃO: Esta ação é irreversível e todos os seus dados serão perdidos permanentemente!",
+      keywords: ["excluir", "deletar", "apagar", "conta", "remover", "zona de perigo"],
+      category: "Conta"
+    },
+    "A aplicação não carrega": {
+      response: "Se a aplicação não carrega:\n1️⃣ Limpe o cache do navegador (Ctrl+Shift+Delete)\n2️⃣ Tente em modo anônimo\n3️⃣ Use outro navegador (Chrome, Firefox, Edge)\n4️⃣ Suas credenciais podem estar salvas no localStorage\n\nSe o problema persistir, entre em contato conosco!",
+      keywords: ["não carrega", "não abre", "branco", "erro", "problema", "carregamento"],
+      category: "Técnico"
+    },
+    "Perdi acesso a minha conta": {
+      response: "Se perdeu acesso:\n• Clique em 'esqueceu a senha?' na tela de login\n• Siga o processo de recuperação\n• Se não conseguir, precisaremos resetar sua conta\n\nPare isso, fale conosco via WhatsApp ou entre em contato com suporte!",
+      keywords: ["perdi", "acesso", "travado", "bloqueada", "locked", "account locked"],
+      category: "Conta"
+    },
+    "Os dados não estão sincronizando": {
+      response: "Problemas de sincronização geralmente são resolvidos:\n✓ Atualizando a página (F5)\n✓ Limpando o cache\n✓ Verificando conexão de internet\n✓ Fechando e reabrindo o app\n\nSe persistir, pode ser um erro local. Nos avise!",
+      keywords: ["sincronizando", "sincronizar", "não sinc", "dados perdidos", "desincronizado"],
+      category: "Técnico"
+    },
+    "Como criar um relatório de finanças?": {
+      response: "Para gerar relatórios em Finanças:\n1️⃣ Acesse 'Finanças'\n2️⃣ Escolha o período desejado\n3️⃣ Clique em 'Gerar Relatório'\n4️⃣ Você pode visualizar gráficos e estatísticas\n5️⃣ Use 'Exportar' para salvar em PDF (em breve)\n\nOs gráficos mostram tendências de gastos e receitas!",
+      keywords: ["relatório", "relatorio", "gráfico", "grafico", "estatística", "estatistica"],
+      category: "Finanças"
+    },
+    "Como definir lembretes para tarefas?": {
+      response: "Para adicionar lembretes nas tarefas:\n1️⃣ Crie ou abra uma tarefa\n2️⃣ Procure pela opção 'Lembrete' ou 'Notificação'\n3️⃣ Defina a hora antes do vencimento\n4️⃣ O app notificará você no horário agendado\n\nVocê receberá uma notificação no navegador!",
+      keywords: ["lembrete", "reminder", "notificação", "notificacao", "alerta"],
+      category: "Tarefas"
+    },
+    "Posso usar em dispositivos móveis?": {
+      response: "Sim! O Aphaday é totalmente responsivo:\n📱 Funciona em celular, tablet e desktop\n💻 Acesse pelo navegador do seu celular\n🔔 Em breve teremos apps nativos para iOS e Android\n\nTodos os seus dados sincronizam automaticamente!",
+      keywords: ["mobile", "celular", "app", "android", "ios", "smartphone", "tablet"],
+      category: "Técnico"
+    }
+  };
+
+  let conversationHistory = [];
+  let ticketNumber = null;
+  let userSatisfaction = null;
+
+  // Categorias de suporte
+  const supportCategories = {
+    "Conta": "👤",
+    "Segurança": "🔒",
+    "Funcionalidades": "⚙️",
+    "Tarefas": "✓",
+    "Finanças": "💰",
+    "Dados": "💾",
+    "Notas": "📝",
+    "Técnico": "🔧",
+    "Aparência": "🎨",
+    "Informações": "ℹ️"
+  };
+
+  // Padrões de sentimento para detectar se o usuário está frustrado
+  const negativeSentiments = ["frustrado", "frust", "irritado", "irrit", "problema", "erro", "bug", "não funciona", "nao funciona", "pior", "horrível", "horivel", "péssimo", "pessimo", "raiva", "raio"];
+  const satisfactionPhrases = ["obrigado", "obrigada", "valeu", "thanks", "ajudou", "funcionou", "funcionou", "perfeito", "ótimo", "otimo", "legal", "top"];
+
+  const faqList = document.getElementById('faq-list');
+  const chatMessages = document.getElementById('chat-messages');
+  const chatInput = document.getElementById('chat-input');
+  const sendBtn = document.getElementById('send-btn');
+  const initialSuggestions = document.getElementById('initial-suggestions');
+
+  // Populate FAQ list com categorias
+  Object.keys(knowledgeBase).forEach((question, index) => {
+    const item = document.createElement('div');
+    item.className = 'faq-item';
+    const category = knowledgeBase[question].category || '';
+    const icon = supportCategories[category] || '❓';
+    item.textContent = question;
+    item.title = `${icon} ${category}`;
+    item.onclick = () => selectFAQ(question, index);
+    faqList.appendChild(item);
+  });
+
+  // Populate initial suggestions
+  const topQuestions = Object.keys(knowledgeBase).slice(0, 3);
+  topQuestions.forEach(question => {
+    const btn = document.createElement('button');
+    btn.className = 'suggestion-btn';
+    btn.textContent = question.substring(0, 30) + '...';
+    btn.type = 'button';
+    btn.onclick = () => {
+      chatInput.value = question;
+      sendMessage();
+    };
+    initialSuggestions.appendChild(btn);
+  });
+
+  function selectFAQ(question, index) {
+    document.querySelectorAll('.faq-item').forEach(item => item.classList.remove('active'));
+    document.querySelectorAll('.faq-item')[index].classList.add('active');
+    chatInput.value = question;
+    sendMessage();
+  }
+
+  // Detectar sentimento do usuário
+  function analyzeSentiment(message) {
+    const lowercase = message.toLowerCase();
+    const isNegative = negativeSentiments.some(word => lowercase.includes(word));
+    const isSatisfied = satisfactionPhrases.some(word => lowercase.includes(word));
+    
+    return {
+      isNegative,
+      isSatisfied
+    };
+  }
+
+  // Gerar número de ticket
+  function generateTicket() {
+    return "TK" + Date.now().toString().slice(-8) + Math.random().toString(36).substring(7).toUpperCase();
+  }
+
+  // Encontrar resposta inteligente
+  function findBestAnswer(userMessage) {
+    const lowerMessage = userMessage.toLowerCase();
+    
+    // Contato direto
+    const contactKeywords = ["falar com suporte", "falar com humano", "contato direto", "proprietário", "chokx", "número", "ligação", "whatsapp", "telefonar", "conversar"];
+    if (contactKeywords.some(keyword => lowerMessage.includes(keyword))) {
+      if (!ticketNumber) ticketNumber = generateTicket();
+      return `📞 Para contato direto com proprietário:\n\n🟢 WhatsApp: Clique no botão no topo\n📱 Número: (79) 98157-0034\n\nSeu ticket de suporte: *${ticketNumber}*\nPasse esse número quando falar conosco para agilizar!`;
+    }
+
+    // Análise de sentimento
+    const sentiment = analyzeSentiment(userMessage);
+    if (sentiment.isNegative && !userSatisfaction) {
+      conversationHistory.push({ msg: userMessage, sentiment: 'negative' });
+    }
+    
+    // Busca exata
+    for (const [question, data] of Object.entries(knowledgeBase)) {
+      if (lowerMessage === question.toLowerCase()) {
+        return `${supportCategories[data.category] || '❓'} *${data.category}*\n\n${data.response}`;
+      }
+    }
+
+    // Busca por palavras-chave com scoring melhorado
+    let bestMatch = null;
+    let bestScore = 0;
+    
+    for (const [question, data] of Object.entries(knowledgeBase)) {
+      let score = 0;
+      data.keywords.forEach(keyword => {
+        if (lowerMessage.includes(keyword)) score += 3;
+      });
+      
+      question.toLowerCase().split(' ').forEach(word => {
+        if (word.length > 3 && lowerMessage.includes(word)) score += 1;
+      });
+      
+      if (score > bestScore) {
+        bestScore = score;
+        bestMatch = question;
+      }
+    }
+    
+    if (bestMatch && bestScore > 2) {
+      const data = knowledgeBase[bestMatch];
+      return `${supportCategories[data.category] || '❓'} *${data.category}*\n\n${data.response}`;
+    }
+
+    // Respostas contextuais inteligentes
+    if (lowerMessage.includes("obrigado") || lowerMessage.includes("obrigada")) {
+      userSatisfaction = true;
+      return "🎉 Fico feliz em ajudar! Se precisar de mais algo, é só chamar!\n\nContinue usando Aphaday com sucesso! 🚀";
+    }
+
+    // Sugestão de categorias
+    let suggestedCategories = [];
+    Object.entries(supportCategories).forEach(([cat, icon]) => {
+      if (lowerMessage.includes(cat.toLowerCase())) {
+        suggestedCategories.push(cat);
+      }
+    });
+
+    let response = "❓ Não encontrei uma resposta exata, mas posso ajudar com:\n\n";
+    response += "🔍 Tópicos disponíveis:\n";
+    Object.entries(supportCategories).forEach(([cat, icon]) => {
+      response += `${icon} ${cat}\n`;
+    });
+    response += "\n💡 Tente reformular sua pergunta ou escolha um tópico acima!";
+    response += "\n\n🆘 Ou descreva seu problema para criarmos um ticket!";
+
+    // Criar ticket se for problema não resolvido
+    if (!ticketNumber && sentiment.isNegative) {
+      ticketNumber = generateTicket();
+      response += `\n\nTicket criado: *${ticketNumber}*`;
+    }
+
+    return response;
+  }
+
+  function addMessage(content, isBot = false) {
+    const messageDiv = document.createElement('div');
+    messageDiv.className = `message ${isBot ? 'bot' : 'user'}`;
+    
+    const avatar = document.createElement('div');
+    avatar.className = 'message-avatar';
+    avatar.textContent = isBot ? '🤖' : '👤';
+    
+    const messageContent = document.createElement('div');
+    messageContent.className = 'message-content';
+    messageContent.innerText = content;
+    
+    messageDiv.appendChild(avatar);
+    messageDiv.appendChild(messageContent);
+    chatMessages.appendChild(messageDiv);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+  }
+
+  function showTyping() {
+    const messageDiv = document.createElement('div');
+    messageDiv.className = 'message bot';
+    messageDiv.id = 'typing-indicator';
+    
+    const avatar = document.createElement('div');
+    avatar.className = 'message-avatar';
+    avatar.textContent = '🤖';
+    
+    const typing = document.createElement('div');
+    typing.className = 'typing-indicator';
+    typing.innerHTML = '<div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div>';
+    
+    messageDiv.appendChild(avatar);
+    messageDiv.appendChild(typing);
+    chatMessages.appendChild(messageDiv);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+  }
+
+  function sendMessage() {
+    const message = chatInput.value.trim();
+    if (!message) return;
+    
+    addMessage(message, false);
+    chatInput.value = '';
+    sendBtn.disabled = true;
+    
+    conversationHistory.push({ msg: message, timestamp: new Date() });
+    
+    showTyping();
+    
+    // Tempo dinâmico de resposta baseado em complexidade
+    const responseTime = 300 + Math.random() * 1200;
+    
+    setTimeout(() => {
+      const typingIndicator = document.getElementById('typing-indicator');
+      if (typingIndicator) typingIndicator.remove();
+      
+      const answer = findBestAnswer(message);
+      addMessage(answer, true);
+      sendBtn.disabled = false;
+      chatInput.focus();
+    }, responseTime);
+  }
+
+  sendBtn.onclick = sendMessage;
+  chatInput.onkeypress = (e) => {
+    if (e.key === 'Enter') sendMessage();
+  };
+
+  chatInput.focus();
+</script>
+
+</body>
+</html>

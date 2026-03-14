@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Aphaday - Acesso Celular</title>
+  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: #f4f4f0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+    .card {
+      background: #fff;
+      border: 1px solid #e6e6e0;
+      border-radius: 16px;
+      padding: 40px 36px;
+      max-width: 420px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 10px 30px rgba(0,0,0,.08);
+    }
+    .logo {
+      width: 48px; height: 48px;
+      background: #18181b;
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 16px;
+      color: #f4f4f5;
+      font-size: 22px;
+      font-weight: 800;
+    }
+    h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.5px; color: #18181b; margin-bottom: 6px; }
+    .sub { font-size: 13.5px; color: #888880; margin-bottom: 28px; }
+    #qrcode { display: flex; justify-content: center; margin-bottom: 24px; }
+    #qrcode canvas { border-radius: 12px; border: 1px solid #e6e6e0; padding: 12px; background: #fff; }
+    .link-box {
+      background: #f4f4f0;
+      border: 1px solid #e6e6e0;
+      border-radius: 8px;
+      padding: 12px 16px;
+      font-size: 15px;
+      font-weight: 600;
+      color: #18181b;
+      letter-spacing: 0.3px;
+      margin-bottom: 20px;
+      word-break: break-all;
+    }
+    .steps { text-align: left; margin-bottom: 24px; }
+    .step { display: flex; gap: 12px; align-items: flex-start; margin-bottom: 12px; }
+    .step-num {
+      width: 24px; height: 24px; min-width: 24px;
+      background: #18181b; color: #fff;
+      border-radius: 50%; font-size: 11px; font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .step-text { font-size: 13px; color: #3f3f46; line-height: 1.5; padding-top: 3px; }
+    .btn {
+      display: block; width: 100%;
+      background: #18181b; color: #fff;
+      border: none; border-radius: 8px;
+      padding: 12px; font-size: 14px; font-weight: 700;
+      font-family: inherit; cursor: pointer;
+      text-decoration: none;
+      transition: opacity .15s;
+    }
+    .btn:hover { opacity: .85; }
+    .note { font-size: 11.5px; color: #a1a19a; margin-top: 14px; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="logo">A</div>
+    <h1>Aphaday</h1>
+    <p class="sub">Acesse pelo celular na mesma rede Wi-Fi</p>
+
+    <div id="qrcode"></div>
+
+    <div class="link-box" id="link-text"></div>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-text">Conecte o celular na <strong>mesma rede Wi-Fi</strong> do computador</div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-text">Abra o <strong>Chrome</strong> no celular e escaneie o QR Code acima</div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-text">Toque nos <strong>3 pontos</strong> > <strong>"Adicionar a tela inicial"</strong> para instalar como app</div>
+      </div>
+    </div>
+
+    <a id="open-btn" class="btn" href="#" target="_blank">abrir no navegador agora</a>
+    <p class="note">O servidor precisa estar rodando no PC para funcionar</p>
+  </div>
+
+  <script>
+    var url = 'http://192.168.0.7:8080';
+    document.getElementById('link-text').textContent = url;
+    document.getElementById('open-btn').href = url;
+
+    QRCode.toCanvas(document.createElement('canvas'), url, {
+      width: 220,
+      margin: 1,
+      color: { dark: '#18181b', light: '#ffffff' }
+    }, function(err, canvas) {
+      if (!err) document.getElementById('qrcode').appendChild(canvas);
+    });
+  </script>
+</body>
+</html>

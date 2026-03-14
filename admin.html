@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Painel Administrativo - Aphaday</title>
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#18181b" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Admin Aphaday" />
+  <link rel="apple-touch-icon" href="icons/icon-192.png" />
+  <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png" />
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script src="qrcode.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0a0a0b;
+      --surface: #141416;
+      --surface-2: #1a1a1d;
+      --surface-3: #202023;
+      --border: #2d2d31;
+      --border-2: #25252a;
+      --text: #f5f5f7;
+      --text-2: #d5d5da;
+      --text-muted: #61616b;
+      --green: #50d71e;
+      --green-2: #34c759;
+      --green-bg: #0d2818;
+      --green-border: #1a4d2e;
+      --red: #ff3b30;
+      --red-2: #ff453a;
+      --red-bg: #2c1a1a;
+      --red-border: #663333;
+      --blue: #0a84ff;
+      --blue-bg: #0f172a;
+      --accent: #f5f5f7;
+      --accent-fg: #0a0a0b;
+      --shadow-sm: 0 2px 8px rgba(0,0,0,.15), 0 1px 3px rgba(0,0,0,.1);
+      --shadow: 0 8px 24px rgba(0,0,0,.25), 0 4px 8px rgba(0,0,0,.12);
+      --radius: 14px;
+      --radius-sm: 10px;
+      --transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      --gradient-primary: linear-gradient(135deg, #50d71e 0%, #0a84ff 100%);
+      --gradient-secondary: linear-gradient(135deg, #ff3b30 0%, #ff9500 100%);
+      --gradient-surface: linear-gradient(135deg, #141416 0%, #1a1a1d 100%);
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      min-height: 100vh;
+    }
+
+    .admin-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    .admin-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 30px;
+      padding: 20px;
+      background: var(--gradient-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .admin-title {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .admin-subtitle {
+      font-size: 14px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    .admin-nav {
+      display: flex;
+      gap: 10px;
+    }
+
+    .admin-nav-btn {
+      padding: 8px 16px;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      color: var(--text-2);
+      font-size: 14px;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .admin-nav-btn:hover {
+      background: var(--surface-3);
+      border-color: var(--border-2);
+    }
+
+    .admin-nav-btn.active {
+      background: var(--gradient-primary);
+      border-color: var(--green);
+      color: white;
+    }
+
+    .admin-content {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+
+    .admin-section {
+      background: var(--gradient-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      box-shadow: var(--shadow);
+    }
+
+    .section-title {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 16px;
+      color: var(--text);
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .stat-card {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 16px;
+      text-align: center;
+    }
+
+    .stat-value {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--green);
+      margin-bottom: 4px;
+    }
+
+    .stat-label {
+      font-size: 12px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-2);
+      margin-bottom: 6px;
+    }
+
+    .form-input, .form-textarea, .form-select {
+      width: 100%;
+      padding: 12px 16px;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      color: var(--text);
+      font-size: 14px;
+      transition: var(--transition);
+    }
+
+    .form-input:focus, .form-textarea:focus, .form-select:focus {
+      outline: none;
+      border-color: var(--green);
+      box-shadow: 0 0 0 3px rgba(80, 215, 30, 0.1);
+    }
+
+    .form-textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
+
+    .btn {
+      padding: 12px 20px;
+      border: none;
+      border-radius: var(--radius-sm);
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: var(--transition);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-primary {
+      background: var(--gradient-primary);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: var(--shadow);
+    }
+
+    .btn-secondary {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      color: var(--text-2);
+    }
+
+    .btn-secondary:hover {
+      background: var(--surface-3);
+      border-color: var(--border-2);
+    }
+
+    .btn-danger {
+      background: var(--red);
+      color: white;
+    }
+
+    .btn-danger:hover {
+      background: var(--red-2);
+    }
+
+    .table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 16px;
+    }
+
+    .table th, .table td {
+      padding: 12px 16px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .table th {
+      font-weight: 600;
+      color: var(--text-2);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .table td {
+      font-size: 14px;
+      color: var(--text);
+    }
+
+    .table tr:hover {
+      background: var(--surface-2);
+    }
+
+    .badge {
+      padding: 4px 8px;
+      border-radius: 12px;
+      font-size: 10px;
+      font-weight: 500;
+      text-transform: uppercase;
+    }
+
+    .badge-admin {
+      background: var(--green-bg);
+      color: var(--green);
+    }
+
+    .badge-user {
+      background: var(--blue-bg);
+      color: var(--blue);
+    }
+
+    .notification-item {
+      padding: 16px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      margin-bottom: 12px;
+      background: var(--surface-2);
+    }
+
+    .notification-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .notification-title {
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .notification-date {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .notification-content {
+      color: var(--text-2);
+      line-height: 1.5;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    @media (max-width: 768px) {
+      .admin-container {
+        padding: 10px;
+      }
+
+      .admin-header {
+        flex-direction: column;
+        gap: 16px;
+        text-align: center;
+      }
+
+      .admin-nav {
+        width: 100%;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .table {
+        font-size: 12px;
+      }
+
+      .table th, .table td {
+        padding: 8px 12px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="admin-container">
+    <!-- Admin Header -->
+    <div class="admin-header">
+      <div>
+        <div class="admin-title">Painel Administrativo</div>
+        <div class="admin-subtitle">Aphaday - Controle Total do Sistema</div>
+      </div>
+      <div class="admin-nav">
+        <button class="admin-nav-btn active" data-section="dashboard">Dashboard</button>
+        <button class="admin-nav-btn" data-section="notifications">Avisos</button>
+        <button class="admin-nav-btn" data-section="users">Usuários</button>
+        <button class="admin-nav-btn" data-section="logs">Logs</button>
+        <button class="admin-nav-btn" data-section="settings">Configurações</button>
+        <button class="admin-nav-btn" id="logout-btn">Sair</button>
+      </div>
+    </div>
+
+    <!-- Dashboard Section -->
+    <div id="section-dashboard" class="admin-section">
+      <div class="section-title">📊 Dashboard</div>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-value" id="total-users">0</div>
+          <div class="stat-label">Total de Usuários</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="active-users">0</div>
+          <div class="stat-label">Usuários Ativos (24h)</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="total-logins">0</div>
+          <div class="stat-label">Total de Logins</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="total-notifications">0</div>
+          <div class="stat-label">Avisos Enviados</div>
+        </div>
+      </div>
+
+      <div style="margin-top: 24px;">
+        <canvas id="activity-chart" width="400" height="200"></canvas>
+      </div>
+    </div>
+
+    <!-- Notifications Section -->
+    <div id="section-notifications" class="admin-section hidden">
+      <div class="section-title">📢 Gerenciar Avisos</div>
+
+      <form id="notification-form">
+        <div class="form-group">
+          <label class="form-label">Título do Aviso</label>
+          <input type="text" class="form-input" id="notification-title" placeholder="Digite o título do aviso" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Conteúdo do Aviso</label>
+          <textarea class="form-textarea" id="notification-content" placeholder="Digite o conteúdo do aviso" required></textarea>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Tipo de Aviso</label>
+          <select class="form-select" id="notification-type">
+            <option value="info">Informação</option>
+            <option value="warning">Aviso</option>
+            <option value="success">Sucesso</option>
+            <option value="error">Erro</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Público Alvo</label>
+          <select class="form-select" id="notification-target">
+            <option value="all">Todos os usuários</option>
+            <option value="active">Usuários ativos (24h)</option>
+            <option value="inactive">Usuários inativos</option>
+          </select>
+        </div>
+        <button type="submit" class="btn btn-primary">📤 Enviar Aviso</button>
+      </form>
+
+      <div style="margin-top: 32px;">
+        <div class="section-title">Avisos Recentes</div>
+        <div id="notifications-list">
+          <!-- Notifications will be loaded here -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Users Section -->
+    <div id="section-users" class="admin-section hidden">
+      <div class="section-title">👥 Gerenciar Usuários</div>
+
+      <div style="margin-bottom: 24px;">
+        <input type="text" class="form-input" id="user-search" placeholder="Buscar usuário..." style="max-width: 300px;">
+      </div>
+
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Usuário</th>
+            <th>Tipo</th>
+            <th>Criado em</th>
+            <th>Último Login</th>
+            <th>Status</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody id="users-table-body">
+          <!-- Users will be loaded here -->
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Logs Section -->
+    <div id="section-logs" class="admin-section hidden">
+      <div class="section-title">📋 Logs do Sistema</div>
+
+      <div style="margin-bottom: 24px;">
+        <select class="form-select" id="log-filter" style="max-width: 200px;">
+          <option value="all">Todos os logs</option>
+          <option value="login">Logins</option>
+          <option value="register">Registros</option>
+          <option value="admin">Ações Admin</option>
+        </select>
+        <button class="btn btn-secondary" id="clear-logs-btn" style="margin-left: 12px;">🗑️ Limpar Logs Antigos</button>
+      </div>
+
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Usuário</th>
+            <th>Ação</th>
+            <th>Data/Hora</th>
+            <th>IP/Detalhes</th>
+          </tr>
+        </thead>
+        <tbody id="logs-table-body">
+          <!-- Logs will be loaded here -->
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Settings Section -->
+    <div id="section-settings" class="admin-section hidden">
+      <div class="section-title">⚙️ Configurações do Sistema</div>
+
+      <form id="settings-form">
+        <div class="form-group">
+          <label class="form-label">Manutenção do Sistema</label>
+          <div style="display: flex; gap: 12px; align-items: center;">
+            <label style="display: flex; align-items: center; gap: 8px;">
+              <input type="checkbox" id="maintenance-mode">
+              Modo de Manutenção
+            </label>
+          </div>
+          <small style="color: var(--text-muted);">Quando ativado, novos usuários não poderão se registrar</small>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Mensagem de Manutenção</label>
+          <textarea class="form-textarea" id="maintenance-message" placeholder="Mensagem exibida durante manutenção"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Backup Automático</label>
+          <div style="display: flex; gap: 12px; align-items: center;">
+            <label style="display: flex; align-items: center; gap: 8px;">
+              <input type="checkbox" id="auto-backup" checked>
+              Habilitar Backup Automático
+            </label>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Frequência de Backup</label>
+          <select class="form-select" id="backup-frequency">
+            <option value="daily">Diário</option>
+            <option value="weekly">Semanal</option>
+            <option value="monthly">Mensal</option>
+          </select>
+        </div>
+
+        <button type="submit" class="btn btn-primary">💾 Salvar Configurações</button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    // Admin Panel JavaScript
+    const SESSION_KEY = 'auth_session';
+    const AUTH_KEY = 'users_database';
+    const LOGS_KEY = 'login_logs';
+    const NOTIFICATIONS_KEY = 'admin_notifications';
+
+    // Utility functions
+    function load(key, defaultValue = null) {
+      try {
+        const item = localStorage.getItem(key);
+        return item ? JSON.parse(item) : defaultValue;
+      } catch {
+        return defaultValue;
+      }
+    }
+
+    function save(key, value) {
+      try {
+        localStorage.setItem(key, JSON.stringify(value));
+      } catch (err) {
+        console.error('Error saving to localStorage:', err);
+      }
+    }
+
+    async function sha256(message) {
+      const msgBuffer = new TextEncoder().encode(message);
+      const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+      const hashArray = Array.from(new Uint8Array(hashBuffer));
+      return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+    }
+
+    function getSession() {
+      try {
+        const s = sessionStorage.getItem(SESSION_KEY);
+        return s ? JSON.parse(s) : null;
+      } catch { return null; }
+    }
+
+    function isAdmin() {
+      const session = getSession();
+      return session && session.isAdmin;
+    }
+
+    function getAllUsers() {
+      const db = load(AUTH_KEY, { users: [] });
+      return db.users || [];
+    }
+
+    function getAllLogs() {
+      return load(LOGS_KEY, []);
+    }
+
+    function getAllNotifications() {
+      return load(NOTIFICATIONS_KEY, []);
+    }
+
+    // Navigation
+    document.querySelectorAll('.admin-nav-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        if (this.id === 'logout-btn') {
+          sessionStorage.removeItem(SESSION_KEY);
+          window.location.href = 'index.html';
+          return;
+        }
+
+        const section = this.dataset.section;
+        document.querySelectorAll('.admin-section').forEach(sec => sec.classList.add('hidden'));
+        document.querySelectorAll('.admin-nav-btn').forEach(b => b.classList.remove('active'));
+
+        document.getElementById(`section-${section}`).classList.remove('hidden');
+        this.classList.add('active');
+      });
+    });
+
+    // Load dashboard data
+    function loadDashboard() {
+      const users = getAllUsers();
+      const logs = getAllLogs();
+      const notifications = getAllNotifications();
+
+      // Stats
+      document.getElementById('total-users').textContent = users.length;
+      document.getElementById('total-logins').textContent = logs.filter(l => l.success).length;
+      document.getElementById('total-notifications').textContent = notifications.length;
+
+      // Active users (last 24h)
+      const now = new Date();
+      const yesterday = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+      const activeUsers = new Set();
+
+      logs.filter(l => l.success && new Date(l.timestamp) > yesterday).forEach(log => {
+        activeUsers.add(log.username);
+      });
+
+      document.getElementById('active-users').textContent = activeUsers.size;
+
+      // Activity chart
+      const ctx = document.getElementById('activity-chart').getContext('2d');
+      const last7Days = Array.from({length: 7}, (_, i) => {
+        const date = new Date();
+        date.setDate(date.getDate() - (6 - i));
+        return date.toISOString().split('T')[0];
+      });
+
+      const loginData = last7Days.map(date => {
+        return logs.filter(l => l.success && l.timestamp.startsWith(date)).length;
+      });
+
+      new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: last7Days.map(d => new Date(d).toLocaleDateString('pt-BR')),
+          datasets: [{
+            label: 'Logins',
+            data: loginData,
+            borderColor: '#50d71e',
+            backgroundColor: 'rgba(80, 215, 30, 0.1)',
+            tension: 0.4
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: {
+              display: false
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              grid: {
+                color: '#2d2d31'
+              },
+              ticks: {
+                color: '#d5d5da'
+              }
+            },
+            x: {
+              grid: {
+                color: '#2d2d31'
+              },
+              ticks: {
+                color: '#d5d5da'
+              }
+            }
+          }
+        }
+      });
+    }
+
+    // Load users table
+    function loadUsers() {
+      const users = getAllUsers();
+      const tbody = document.getElementById('users-table-body');
+
+      tbody.innerHTML = users.map(user => `
+        <tr>
+          <td>${user.username}</td>
+          <td><span class="badge ${user.isAdmin ? 'badge-admin' : 'badge-user'}">${user.isAdmin ? 'Admin' : 'Usuário'}</span></td>
+          <td>${new Date(user.createdAt).toLocaleDateString('pt-BR')}</td>
+          <td>${user.lastLogin ? new Date(user.lastLogin).toLocaleDateString('pt-BR') : 'Nunca'}</td>
+          <td>Ativo</td>
+          <td>
+            ${!user.isAdmin ? `
+              <button class="btn btn-danger btn-sm" onclick="banUser('${user.username}')">Banir</button>
+            ` : ''}
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    // Load logs table
+    function loadLogs() {
+      const logs = getAllLogs();
+      const tbody = document.getElementById('logs-table-body');
+
+      tbody.innerHTML = logs.slice(0, 100).map(log => `
+        <tr>
+          <td>${log.username}</td>
+          <td>${log.success ? 'Login' : 'Tentativa falhada'}</td>
+          <td>${new Date(log.timestamp).toLocaleString('pt-BR')}</td>
+          <td>${log.isAdmin ? 'Admin' : 'Usuário'}</td>
+        </tr>
+      `).join('');
+    }
+
+    // Load notifications
+    function loadNotifications() {
+      const notifications = getAllNotifications();
+      const container = document.getElementById('notifications-list');
+
+      container.innerHTML = notifications.slice(0, 10).map(notification => `
+        <div class="notification-item">
+          <div class="notification-header">
+            <div class="notification-title">${notification.title}</div>
+            <div class="notification-date">${new Date(notification.timestamp).toLocaleString('pt-BR')}</div>
+          </div>
+          <div class="notification-content">${notification.content}</div>
+        </div>
+      `).join('');
+    }
+
+    // Send notification
+    document.getElementById('notification-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const title = document.getElementById('notification-title').value;
+      const content = document.getElementById('notification-content').value;
+      const type = document.getElementById('notification-type').value;
+      const target = document.getElementById('notification-target').value;
+
+      const notification = {
+        id: Date.now(),
+        title,
+        content,
+        type,
+        target,
+        timestamp: new Date().toISOString(),
+        admin: getSession().username
+      };
+
+      const notifications = getAllNotifications();
+      notifications.unshift(notification);
+      save(NOTIFICATIONS_KEY, notifications);
+
+      // Clear form
+      this.reset();
+
+      // Reload notifications
+      loadNotifications();
+      loadDashboard();
+
+      alert('Aviso enviado com sucesso!');
+    });
+
+    // User search
+    document.getElementById('user-search').addEventListener('input', function() {
+      const searchTerm = this.value.toLowerCase();
+      const rows = document.querySelectorAll('#users-table-body tr');
+
+      rows.forEach(row => {
+        const username = row.cells[0].textContent.toLowerCase();
+        row.style.display = username.includes(searchTerm) ? '' : 'none';
+      });
+    });
+
+    // Clear old logs
+    document.getElementById('clear-logs-btn').addEventListener('click', function() {
+      if (confirm('Tem certeza que deseja limpar logs antigos?')) {
+        const logs = getAllLogs();
+        const recentLogs = logs.filter(log => {
+          const logDate = new Date(log.timestamp);
+          const weekAgo = new Date();
+          weekAgo.setDate(weekAgo.getDate() - 7);
+          return logDate > weekAgo;
+        });
+
+        save(LOGS_KEY, recentLogs);
+        loadLogs();
+        alert('Logs antigos removidos!');
+      }
+    });
+
+    // Settings form
+    document.getElementById('settings-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const maintenanceMode = document.getElementById('maintenance-mode').checked;
+      const maintenanceMessage = document.getElementById('maintenance-message').value;
+      const autoBackup = document.getElementById('auto-backup').checked;
+      const backupFrequency = document.getElementById('backup-frequency').value;
+
+      const settings = {
+        maintenanceMode,
+        maintenanceMessage,
+        autoBackup,
+        backupFrequency,
+        updatedAt: new Date().toISOString()
+      };
+
+      save('admin_settings', settings);
+      alert('Configurações salvas com sucesso!');
+    });
+
+    // Load settings
+    function loadSettings() {
+      const settings = load('admin_settings', {});
+
+      document.getElementById('maintenance-mode').checked = settings.maintenanceMode || false;
+      document.getElementById('maintenance-message').value = settings.maintenanceMessage || '';
+      document.getElementById('auto-backup').checked = settings.autoBackup !== false;
+      document.getElementById('backup-frequency').value = settings.backupFrequency || 'weekly';
+    }
+
+    // Ban user function
+    function banUser(username) {
+      if (confirm(`Tem certeza que deseja banir o usuário ${username}?`)) {
+        const users = getAllUsers();
+        const userIndex = users.findIndex(u => u.username === username);
+
+        if (userIndex !== -1) {
+          users[userIndex].banned = true;
+          save(AUTH_KEY, { users });
+
+          // Add to ban list
+          const bans = load('user_bans', []);
+          bans.push({
+            username,
+            bannedAt: new Date().toISOString(),
+            bannedBy: getSession().username
+          });
+          save('user_bans', bans);
+
+          loadUsers();
+          alert('Usuário banido com sucesso!');
+        }
+      }
+    }
+
+    // Make banUser global
+    window.banUser = banUser;
+
+    // Initialize
+    window.addEventListener('load', function() {
+      if (!isAdmin()) {
+        window.location.href = 'index.html';
+        return;
+      }
+
+      loadDashboard();
+      loadUsers();
+      loadLogs();
+      loadNotifications();
+      loadSettings();
+    });
+  </script>
+</body>
+</html></content>
+<parameter name="filePath">c:\Users\santo\OneDrive\Documentos\Aphaday 2.0\admin.html

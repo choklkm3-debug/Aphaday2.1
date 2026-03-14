@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Aphaday</title>
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#18181b" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Aphaday" />
+  <link rel="apple-touch-icon" href="icons/icon-192.png" />
+  <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png" />
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script src="qrcode.min.js"></script>
+</head>
+<body>
+
+  <!-- ── Login screen ──────────────────────────────── -->
+  <div id="login-screen">
+    <div class="login-box">
+      <div class="login-logo">
+        <div class="logo-icon" style="width:40px;height:40px;border-radius:12px">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+        </div>
+        <div>
+          <div class="login-title">Aphaday</div>
+          <div class="login-sub">acesso privado</div>
+        </div>
+      </div>
+
+      <!-- Login Form -->
+      <form id="login-form" autocomplete="off">
+        <div class="login-field">
+          <label class="login-label">usuario</label>
+          <input type="text" id="login-user" class="login-input" placeholder="seu usuario" autocomplete="off" />
+        </div>
+        <div class="login-field">
+          <label class="login-label">senha</label>
+          <div class="login-input-wrap">
+            <input type="password" id="login-pass" class="login-input" placeholder="sua senha" autocomplete="off" />
+            <button type="button" class="toggle-pass" id="toggle-pass" tabindex="-1">
+              <svg id="eye-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            </button>
+          </div>
+        </div>
+        <div class="login-error" id="login-error"></div>
+        <button type="submit" class="login-btn">entrar</button>
+        <button type="button" class="forgot-btn" id="forgot-btn">esqueceu a senha?</button>
+      </form>
+
+      <div style="text-align: center; padding: 16px 0; border-top: 1px solid var(--border); margin-top: 16px;">
+        <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 12px;">nao tem perfil ainda?</p>
+        <button type="button" class="login-btn" id="register-btn" style="background: var(--green);">criar novo perfil</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Register Modal ────────────────────────────── -->
+  <div id="register-overlay" class="modal-overlay hidden">
+    <div class="modal-box">
+      <div class="modal-header">
+        <div class="modal-title">criar nova conta</div>
+        <button class="modal-close" id="register-close">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <div style="background: rgba(80, 215, 30, 0.1); border: 1px solid rgba(80, 215, 30, 0.3); border-radius: 8px; padding: 12px; margin-bottom: 16px; font-size: 12px; color: var(--text-muted);">
+        ✨ Crie sua conta pessoal! Cada usuário terá seu próprio perfil e dados sincronizados.
+      </div>
+      <form id="register-form">
+        <div class="login-field">
+          <label class="login-label">nome de perfil</label>
+          <input type="text" id="reg-user" class="login-input" placeholder="seu nome de usuario" />
+        </div>
+        <div class="login-field">
+          <label class="login-label">senha</label>
+          <input type="password" id="reg-pass" class="login-input" placeholder="minimo 4 caracteres" />
+        </div>
+        <div class="login-field">
+          <label class="login-label">confirmar senha</label>
+          <input type="password" id="reg-pass2" class="login-input" placeholder="repita a senha" />
+        </div>
+        <div class="login-error" id="register-error"></div>
+        <div class="modal-actions">
+          <button type="button" class="btn-ghost" id="register-cancel">cancelar</button>
+          <button type="submit" class="login-btn" style="flex:1">criar perfil</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ── Change password modal ─────────────────────── -->
+  <div id="modal-overlay" class="modal-overlay hidden">
+    <div class="modal-box">
+      <div class="modal-header">
+        <div class="modal-title">alterar credenciais</div>
+        <button class="modal-close" id="modal-close">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <form id="change-creds-form">
+        <div class="login-field">
+          <label class="login-label">novo usuario</label>
+          <input type="text" id="new-user" class="login-input" placeholder="usuario atual" />
+        </div>
+        <div class="login-field">
+          <label class="login-label">nova senha</label>
+          <input type="password" id="new-pass" class="login-input" placeholder="minimo 4 caracteres" />
+        </div>
+        <div class="login-field">
+          <label class="login-label">confirmar senha</label>
+          <input type="password" id="new-pass2" class="login-input" placeholder="repita a senha" />
+        </div>
+        <div class="login-error" id="modal-error"></div>
+        <div class="modal-actions">
+          <button type="button" class="btn-ghost" id="modal-cancel">cancelar</button>
+          <button type="submit" class="login-btn" style="flex:1">salvar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ── Forgot password modal ────────────────────── -->
+  <div id="forgot-overlay" class="modal-overlay hidden">
+    <div class="modal-box">
+      <div class="modal-header">
+        <div class="modal-title">recuperar acesso</div>
+        <button class="modal-close" id="forgot-close">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <!-- Passo 1 -->
+      <div id="forgot-step1">
+        <p class="recover-hint">Digite o codigo secreto de recuperacao para redefinir sua senha.</p>
+        <div class="login-field">
+          <label class="login-label">codigo secreto</label>
+          <input type="password" id="recover-code" class="login-input" placeholder="codigo de recuperacao" autocomplete="off" />
+        </div>
+        <div class="login-error" id="forgot-error"></div>
+        <div class="modal-actions">
+          <button type="button" class="btn-ghost" id="forgot-cancel">cancelar</button>
+          <button type="button" class="login-btn" id="forgot-verify-btn" style="flex:1">verificar</button>
+        </div>
+      </div>
+      <!-- Passo 2 -->
+      <div id="forgot-step2" class="hidden">
+        <p class="recover-hint recover-success">Codigo confirmado! Defina suas novas credenciais.</p>
+        <div class="login-field">
+          <label class="login-label">novo usuario</label>
+          <input type="text" id="recover-user" class="login-input" placeholder="novo usuario" autocomplete="off" />
+        </div>
+        <div class="login-field">
+          <label class="login-label">nova senha</label>
+          <input type="password" id="recover-pass" class="login-input" placeholder="minimo 4 caracteres" />
+        </div>
+        <div class="login-field">
+          <label class="login-label">confirmar senha</label>
+          <input type="password" id="recover-pass2" class="login-input" placeholder="repita a senha" />
+        </div>
+        <div class="login-error" id="forgot-error2"></div>
+        <div class="modal-actions">
+          <button type="button" class="btn-ghost" id="forgot-back">voltar</button>
+          <button type="button" class="login-btn" id="forgot-save-btn" style="flex:1">salvar</button>
+        </div>
+      </div>
+      <!-- Passo 3 -->
+      <div id="forgot-step3" class="hidden">
+        <div class="recover-done">
+          <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          <div class="recover-done-title">senha redefinida!</div>
+          <div class="recover-done-sub">Suas credenciais foram atualizadas com sucesso.</div>
+        </div>
+        <button type="button" class="login-btn" id="forgot-finish-btn">fazer login</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Welcome overlay ──────────────────────────── -->
+  <div id="welcome-overlay" class="hidden">
+    <div class="welcome-text">
+      Bem-vindo, <span class="welcome-name" id="welcome-username">APHADAY</span>
+    </div>
+    <div class="welcome-subtitle">v2.1.0 - Interface renovada ✨</div>
+    <div class="loading-bar"></div>
+  </div>
+
+  <div id="app" class="hidden">
+    <aside class="sidebar">
+      <div class="logo">
+        <div class="logo-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+        </div>
+        <span class="logo-text">Aphaday</span>
+      </div>
+
+      <div class="nav-section-label">menu</div>
+      <nav>
+        <button class="nav-btn active" data-page="overview">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+          <span>visao geral</span>
+        </button>
+        <button class="nav-btn" data-page="tasks">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+          <span>tarefas</span>
+        </button>
+        <button class="nav-btn" data-page="finance">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+          <span>financas</span>
+        </button>
+        <button class="nav-btn" data-page="notes">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+          <span>notas</span>
+        </button>
+        <button class="nav-btn" id="admin-nav-btn" data-page="admin" style="display:none;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/><path d="M16 11h6"/></svg>
+          <span>admin</span>
+        </button>
+        <button class="nav-btn" id="support-nav-btn" data-page="support">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+          <span>suporte</span>
+        </button>
+        <button class="nav-btn" id="admin-panel-btn" style="display:none;" onclick="window.open('admin.html', '_blank')">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <span>painel admin</span>
+        </button>
+        <button class="nav-btn" data-page="qr-mobile">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="9" height="9"/><rect x="12" y="3" width="9" height="9"/><rect x="3" y="12" width="9" height="9"/><circle cx="16.5" cy="16.5" r="1.5"/></svg>
+          <span>celular</span>
+        </button>
+        <button class="nav-btn" data-page="profile">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          <span>perfil</span>
+        </button>
+      </nav>
+
+      <div class="sidebar-bottom">
+        <div class="sidebar-date" id="sidebar-date"></div>
+        
+        <div style="padding: 12px; border-top: 1px solid var(--border); margin-top: 12px; font-size: 11px; text-align: center;">
+          <button class="theme-btn" id="sync-btn" style="width: 100%; gap: 8px; margin-bottom: 8px;">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 4v6h-6"/><path d="M20.49 15a9 9 0 11-2-8.12"/></svg>
+            <span>atualizar agora</span>
+          </button>
+          <div style="color: var(--text-muted); margin-top: 6px;">
+            <div style="font-size: 10px; margin-bottom: 2px;">v2.1.0 ✨</div>
+            <div id="last-update" style="font-size: 9px; color: var(--text-muted);">---</div>
+          </div>
+        </div>
+        
+        <button class="theme-btn" id="theme-btn">
+          <svg id="theme-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+          <span id="theme-label">modo escuro</span>
+        </button>
+        <button class="theme-btn" id="change-creds-btn">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+          <span>alterar senha</span>
+        </button>
+        <button class="theme-btn logout-btn" id="logout-btn">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          <span>sair</span>
+        </button>
+      </div>
+    </aside>
+
+    <main class="content">
+      <!-- Overview -->
+      <section class="page active" id="page-overview">
+        <div class="page-header">
+          <div>
+            <h1 class="page-title">visao geral</h1>
+            <div class="page-subtitle" id="ov-greeting"></div>
+          </div>
+        </div>
+        <div class="overview-grid">
+          <div class="card">
+            <div class="card-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+            </div>
+            <div class="card-label">saldo atual</div>
+            <div class="card-value" id="ov-balance">R$ 0,00</div>
+          </div>
+          <div class="card">
+            <div class="card-icon blue">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+            </div>
+            <div class="card-label">tarefas</div>
+            <div class="card-value" id="ov-tasks">0 / 0</div>
+          </div>
+          <div class="card">
+            <div class="card-icon green">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+            </div>
+            <div class="card-label">receitas do mes</div>
+            <div class="card-value green" id="ov-income">R$ 0,00</div>
+          </div>
+          <div class="card">
+            <div class="card-icon red">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 18 13.5 8.5 8.5 13.5 1 6"/><polyline points="17 18 23 18 23 12"/></svg>
+            </div>
+            <div class="card-label">despesas do mes</div>
+            <div class="card-value red" id="ov-expense">R$ 0,00</div>
+          </div>
+        </div>
+        <div class="recent-section">
+          <div class="recent-block">
+            <div class="section-label">ultimas transacoes</div>
+            <ul class="recent-list" id="ov-transactions"></ul>
+          </div>
+          <div class="recent-block">
+            <div class="section-label">tarefas pendentes</div>
+            <ul class="recent-list" id="ov-pending-tasks"></ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- Tasks -->
+      <section class="page" id="page-tasks">
+        <div class="page-header">
+          <div>
+            <h1 class="page-title">tarefas</h1>
+            <div class="page-subtitle" id="tasks-subtitle">organize seu dia</div>
+          </div>
+        </div>
+        <div class="form-card">
+          <form class="input-row" id="task-form">
+            <input type="text" id="task-input" placeholder="adicionar nova tarefa..." />
+            <select id="task-priority">
+              <option value="normal">&#9679; normal</option>
+              <option value="alta">&#9650; alta</option>
+              <option value="baixa">&#9660; baixa</option>
+            </select>
+            <button type="submit">+ adicionar</button>
+          </form>
+        </div>
+        <div class="filter-row">
+          <button class="filter-btn active" data-filter="all">todas</button>
+          <button class="filter-btn" data-filter="pending">pendentes</button>
+          <button class="filter-btn" data-filter="done">concluidas</button>
+        </div>
+        <ul class="task-list" id="task-list"></ul>
+      </section>
+
+      <!-- Finance -->
+      <section class="page" id="page-finance">
+        <div class="page-header">
+          <div>
+            <h1 class="page-title">financas</h1>
+            <div class="page-subtitle">controle financeiro mensal</div>
+          </div>
+        </div>
+        <div class="finance-summary">
+          <div class="fin-card green">
+            <div class="card-icon green" style="margin-bottom:12px">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+            </div>
+            <div class="card-label">receitas</div>
+            <div class="card-value green" id="fin-income">R$ 0,00</div>
+          </div>
+          <div class="fin-card red">
+            <div class="card-icon red" style="margin-bottom:12px">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 18 13.5 8.5 8.5 13.5 1 6"/><polyline points="17 18 23 18 23 12"/></svg>
+            </div>
+            <div class="card-label">despesas</div>
+            <div class="card-value red" id="fin-expense">R$ 0,00</div>
+          </div>
+          <div class="fin-card">
+            <div class="card-icon" style="margin-bottom:12px">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+            </div>
+            <div class="card-label">saldo</div>
+            <div class="card-value" id="fin-balance">R$ 0,00</div>
+          </div>
+        </div>
+        <div class="form-card">
+          <form class="input-row" id="finance-form">
+            <input type="text" id="fin-desc" placeholder="descricao..." />
+            <input type="number" id="fin-amount" placeholder="valor (R$)" step="0.01" min="0" />
+            <select id="fin-type">
+              <option value="income">&#8593; receita</option>
+              <option value="expense">&#8595; despesa</option>
+            </select>
+            <select id="fin-category">
+              <option value="alimentacao">alimentacao</option>
+              <option value="transporte">transporte</option>
+              <option value="moradia">moradia</option>
+              <option value="saude">saude</option>
+              <option value="lazer">lazer</option>
+              <option value="salario">salario</option>
+              <option value="outros">outros</option>
+            </select>
+            <button type="submit">+ adicionar</button>
+          </form>
+        </div>
+        <ul class="transaction-list" id="transaction-list"></ul>
+        <div class="charts-grid">
+          <div class="chart-card">
+            <div class="section-label">despesas por categoria</div>
+            <div class="chart-wrap"><canvas id="chart-category"></canvas></div>
+          </div>
+          <div class="chart-card">
+            <div class="section-label">receitas vs despesas (6 meses)</div>
+            <div class="chart-wrap"><canvas id="chart-monthly"></canvas></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Notes -->
+      <section class="page" id="page-notes">
+        <div class="page-header">
+          <div>
+            <h1 class="page-title">notas</h1>
+            <div class="page-subtitle">suas anotacoes pessoais</div>
+          </div>
+        </div>
+        <div class="notes-layout">
+          <div class="notes-sidebar">
+            <button class="new-note-btn" id="new-note-btn">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              nova nota
+            </button>
+            <ul class="notes-list" id="notes-list"></ul>
+          </div>
+          <div class="note-editor" id="note-editor">
+            <div class="note-placeholder">
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+              selecione ou crie uma nota
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Admin -->
+      <section class="page" id="page-admin">
+        <div class="page-header">
+          <div>
+            <h1 class="page-title">admin</h1>
+            <div class="page-subtitle">painel de controle e logs</div>
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 24px;">
+          <div class="card">
+            <div class="card-label">usuarios registrados</div>
+            <div class="card-value" id="admin-users-count">0</div>
+          </div>
+          <div class="card">
+            <div class="card-label">logins hoje</div>
+            <div class="card-value" id="admin-logins-today">0</div>
+          </div>
+          <div class="card">
+            <div class="card-label">total de logins</div>
+            <div class="card-value" id="admin-logins-total">0</div>
+          </div>
+        </div>
+
+        <div style="background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 16px; margin-bottom: 24px;">
+          <h3 style="font-size: 14px; font-weight: 600; margin-bottom: 12px; color: var(--text);">usuarios banidos</h3>
+          <div style="overflow-x: auto;">
+            <table style="width: 100%; font-size: 12px; border-collapse: collapse;">
+              <thead>
+                <tr style="border-bottom: 1px solid var(--border);">
+                  <th style="text-align: left; padding: 8px; color: var(--text-muted); font-weight: 500;">usuario</th>
+                  <th style="text-align: left; padding: 8px; color: var(--text-muted); font-weight: 500;">motivo</th>
+                  <th style="text-align: left; padding: 8px; color: var(--text-muted); font-weight: 500;">data</th>
+                </tr>
+              </thead>
+              <tbody id="admin-bans-table">
+                <tr>
+                  <td colspan="3" style="padding: 12px; text-align: center; color: var(--text-muted);">nenhum usuario banido</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div style="background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 16px; margin-bottom: 24px;">
+          <h3 style="font-size: 14px; font-weight: 600; margin-bottom: 12px; color: var(--text);">ultimos logins</h3>
+          <div style="overflow-x: auto;">
+            <table style="width: 100%; font-size: 12px; border-collapse: collapse;">
+              <thead>
+                <tr style="border-bottom: 1px solid var(--border);">
+                  <th style="text-align: left; padding: 8px; color: var(--text-muted); font-weight: 500;">usuario</th>
+                  <th style="text-align: left; padding: 8px; color: var(--text-muted); font-weight: 500;">data/hora</th>
+                  <th style="text-align: left; padding: 8px; color: var(--text-muted); font-weight: 500;">status</th>
+                </tr>
+              </thead>
+              <tbody id="admin-logs-table">
+                <tr>
+                  <td colspan="3" style="padding: 12px; text-align: center; color: var(--text-muted);">nenhum login registrado</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div style="background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 16px; margin-bottom: 24px;">
+          <h3 style="font-size: 14px; font-weight: 600; margin-bottom: 12px; color: var(--text);">usuarios registrados</h3>
+          <div style="overflow-x: auto;">
+            <table style="width: 100%; font-size: 12px; border-collapse: collapse;">
+              <thead>
+                <tr style="border-bottom: 1px solid var(--border);">
+                  <th style="text-align: left; padding: 8px; color: var(--text-muted); font-weight: 500;">usuario</th>
+                  <th style="text-align: left; padding: 8px; color: var(--text-muted); font-weight: 500;">criado em</th>
+                  <th style="text-align: left; padding: 8px; color: var(--text-muted); font-weight: 500;">acoes</th>
+                </tr>
+              </thead>
+              <tbody id="admin-users-table">
+                <tr>
+                  <td colspan="3" style="padding: 12px; text-align: center; color: var(--text-muted);">nenhum usuario</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <button type="button" class="login-btn" id="admin-clear-logs" style="background: var(--red);">limpar todos os logs</button>
+      </section>
+
+      <!-- Profile -->
+      <section class="page" id="page-profile">
+        <div class="page-header">
+          <div>
+            <h1 class="page-title">perfil</h1>
+            <div class="page-subtitle">informacoes e historico de acesso</div>
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 24px;">
+          <div class="card">
+            <div class="card-icon blue">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            </div>
+            <div class="card-label">usuario</div>
+            <div class="card-value" id="profile-username">--</div>
+          </div>
+          <div class="card">
+            <div class="card-icon green">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M23 23H1V1h22v22zm-2-2V3H3v18h18z"/></svg>
+            </div>
+            <div class="card-label">acessos totais</div>
+            <div class="card-value" id="profile-total-logins">0</div>
+          </div>
+          <div class="card">
+            <div class="card-icon">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"/><path d="M12 1v6m0 6v6M4.22 4.22l4.24 4.24m5.08 0l4.24-4.24M1 12h6m6 0h6M4.22 19.78l4.24-4.24m5.08 0l4.24 4.24"/></svg>
+            </div>
+            <div class="card-label">ultimo acesso</div>
+            <div class="card-value" id="profile-last-login">--</div>
+          </div>
+        </div>
+
+        <div style="background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 16px; margin-bottom: 24px;">
+          <h3 style="font-size: 14px; font-weight: 600; margin-bottom: 12px; color: var(--text);">historico de uso</h3>
+          <div style="margin-bottom: 12px; display: flex; gap: 8px; align-items: center;">
+            <label style="font-size: 12px; color: var(--text-muted);">filtrar por:</label>
+            <select id="history-filter" style="padding: 6px 8px; background: var(--surface-2); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-size: 12px; cursor: pointer;">
+              <option value="all">todos os acessos</option>
+              <option value="today">hoje</option>
+              <option value="week">ultimos 7 dias</option>
+              <option value="month">ultimos 30 dias</option>
+            </select>
+            <button class="filter-btn" id="clear-history-btn" style="margin-left: auto; padding: 6px 12px; font-size: 12px; background: var(--red);">limpar historico</button>
+          </div>
+          <div style="overflow-x: auto;">
+            <table style="width: 100%; font-size: 12px; border-collapse: collapse;">
+              <thead>
+                <tr style="border-bottom: 1px solid var(--border);">
+                  <th style="text-align: left; padding: 8px; color: var(--text-muted); font-weight: 500;">pagina</th>
+                  <th style="text-align: left; padding: 8px; color: var(--text-muted); font-weight: 500;">data/hora</th>
+                  <th style="text-align: left; padding: 8px; color: var(--text-muted); font-weight: 500;">duracao</th>
+                </tr>
+              </thead>
+              <tbody id="profile-history-table">
+                <tr>
+                  <td colspan="3" style="padding: 12px; text-align: center; color: var(--text-muted);">nenhum historico</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div style="background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 16px; margin-bottom: 24px;">
+          <h3 style="font-size: 14px; font-weight: 600; margin-bottom: 12px; color: var(--text);">paginas mais visitadas</h3>
+          <div id="profile-top-pages" style="display: flex; flex-direction: column; gap: 8px;">
+            <!-- Dados das páginas mais visitadas serão adicionados dinamicamente -->
+          </div>
+        </div>
+
+        <div style="background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 16px;">
+          <h3 style="font-size: 14px; font-weight: 600; margin-bottom: 12px; color: var(--text);">estatisticas</h3>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px;">
+            <div style="padding: 12px; background: var(--surface-2); border-radius: 8px; border: 1px solid var(--border-2);">
+              <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 4px;">media diaria</div>
+              <div style="font-size: 18px; font-weight: 600; color: var(--text);" id="profile-daily-avg">0 min</div>
+            </div>
+            <div style="padding: 12px; background: var(--surface-2); border-radius: 8px; border: 1px solid var(--border-2);">
+              <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 4px;">tempo total</div>
+              <div style="font-size: 18px; font-weight: 600; color: var(--text);" id="profile-total-time">0 min</div>
+            </div>
+            <div style="padding: 12px; background: var(--surface-2); border-radius: 8px; border: 1px solid var(--border-2);">
+              <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 4px;">paginas visitadas</div>
+              <div style="font-size: 18px; font-weight: 600; color: var(--text);" id="profile-pages-count">0</div>
+            </div>
+            <div style="padding: 12px; background: var(--surface-2); border-radius: 8px; border: 1px solid var(--border-2);">
+              <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 4px;">tempo medio</div>
+              <div style="font-size: 18px; font-weight: 600; color: var(--text);" id="profile-avg-time">0 min</div>
+            </div>
+          </div>
+        </div>
+
+        <div style="background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 16px; margin-top: 16px;">
+          <h3 style="font-size: 14px; font-weight: 600; margin-bottom: 12px; color: var(--text);">gerenciar contas</h3>
+          <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 12px;">Crie contas adicionais para compartilhar o Aphaday com outras pessoas</p>
+          <button type="button" class="login-btn" id="create-additional-account-btn" style="background: var(--green); width: 100%;">➕ criar nova conta</button>
+        </div>
+
+        <div style="background: var(--red-bg); border: 2px solid var(--red-border); border-radius: 12px; padding: 16px; margin-top: 24px;">
+          <h3 style="font-size: 14px; font-weight: 700; margin-bottom: 8px; color: var(--red);">⚠️ ZONA DE PERIGO</h3>
+          <p style="font-size: 13px; color: var(--text-2); margin-bottom: 12px;">Esta ação é irreversível e permanente. Todos os seus dados serão deletados.</p>
+          <button class="login-btn" id="delete-account-btn" style="background: var(--red); width: 100%; max-width: 200px;">deletar minha conta</button>
+        </div>
+      </section>
+
+
+
+      <!-- Support Page -->
+      <section class="page" id="page-support">
+        <div class="page-header">
+          <div>
+            <h1 class="page-title">suporte</h1>
+            <div class="page-subtitle">tire suas dúvidas e entre em contato</div>
+          </div>
+        </div>
+        <div style="flex:1; display:flex; flex-direction:column; overflow:hidden;">
+          <iframe src="suporte.html" style="flex:1; width:100%; border:none;"></iframe>
+        </div>
+      </section>
+
+      <!-- QR Mobile Page -->
+      <section class="page" id="page-qr-mobile">
+        <div class="page-header">
+          <div>
+            <h1 class="page-title">conectar celular</h1>
+            <div class="page-subtitle">acesse o Aphaday no seu celular em qualquer lugar</div>
+          </div>
+        </div>
+        
+        <div style="display: flex; gap: 24px; flex-wrap: wrap;">
+          <!-- QR Code Card -->
+          <div style="flex: 1; min-width: 300px;">
+            <div style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px; text-align: center; box-shadow: var(--shadow-sm);">
+              <div style="font-size: 14px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 20px;">QR Code</div>
+              
+              <div id="qr-container" style="display: flex; justify-content: center; margin-bottom: 20px;"></div>
+              
+              <button class="btn-primary" onclick="downloadQRCode()" style="margin-bottom: 12px;">⬇️ Baixar QR Code</button>
+              <button style="width: 100%; background: var(--surface-2); border: 1px solid var(--border); color: var(--text-muted); padding: 9px 20px; border-radius: var(--radius-sm); font-size: 13.5px; font-weight: 600; cursor: pointer; transition: all var(--transition); margin-bottom: 0;" onclick="copyMobileLink()">📋 Copiar Link</button>
+            </div>
+          </div>
+
+          <!-- Instructions Card -->
+          <div style="flex: 1; min-width: 300px;">
+            <div style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px; box-shadow: var(--shadow-sm);">
+              <div style="font-size: 14px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 20px;">Como Usar</div>
+              
+              <div style="display: flex; flex-direction: column; gap: 16px;">
+                <div style="display: flex; gap: 12px;">
+                  <div style="width: 32px; height: 32px; min-width: 32px; background: linear-gradient(135deg, var(--green) 0%, var(--blue) 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 14px;">1</div>
+                  <div style="flex: 1;">
+                    <div style="font-weight: 600; color: var(--text); margin-bottom: 4px;">Conecte o celular</div>
+                    <div style="font-size: 13px; color: var(--text-muted);">na mesma rede Wi-Fi do computador</div>
+                  </div>
+                </div>
+
+                <div style="display: flex; gap: 12px;">
+                  <div style="width: 32px; height: 32px; min-width: 32px; background: linear-gradient(135deg, var(--green) 0%, var(--blue) 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 14px;">2</div>
+                  <div style="flex: 1;">
+                    <div style="font-weight: 600; color: var(--text); margin-bottom: 4px;">Escaneie o QR Code</div>
+                    <div style="font-size: 13px; color: var(--text-muted);">abra a câmera do celular</div>
+                  </div>
+                </div>
+
+                <div style="display: flex; gap: 12px;">
+                  <div style="width: 32px; height: 32px; min-width: 32px; background: linear-gradient(135deg, var(--green) 0%, var(--blue) 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 14px;">3</div>
+                  <div style="flex: 1;">
+                    <div style="font-weight: 600; color: var(--text); margin-bottom: 4px;">Acesse o app</div>
+                    <div style="font-size: 13px; color: var(--text-muted);">toque no link que aparecerá</div>
+                  </div>
+                </div>
+
+                <div style="display: flex; gap: 12px;">
+                  <div style="width: 32px; height: 32px; min-width: 32px; background: linear-gradient(135deg, var(--green) 0%, var(--blue) 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 14px;">4</div>
+                  <div style="flex: 1;">
+                    <div style="font-weight: 600; color: var(--text); margin-bottom: 4px;">Sincronizar dados</div>
+                    <div style="font-size: 13px; color: var(--text-muted);">todos seus dados estão disponíveis no celular</div>
+                  </div>
+                </div>
+              </div>
+
+              <div style="background: rgba(80, 215, 30, 0.08); border: 1px solid rgba(80, 215, 30, 0.2); border-radius: var(--radius-sm); padding: 12px; margin-top: 20px; font-size: 12px; color: var(--text-muted); line-height: 1.6;">
+                <strong style="color: var(--green);">💡 Dica:</strong> Você pode compartilhar o link ou QR Code com outras pessoas para que acessem o Aphaday no celular delas também!
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Link Display -->
+        <div style="margin-top: 24px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px;">
+          <div style="font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 12px;">Link do seu celular</div>
+          <div style="font-family: 'Monaco', 'Courier New', monospace; font-size: 12px; color: var(--green); word-break: break-all; background: var(--surface-2); padding: 12px; border-radius: var(--radius-sm); border: 1px solid var(--border); line-height: 1.6;" id="mobile-link-display"></div>
+        </div>
+      </section>
+
+      <!-- Ban User Modal -->
+      <div id="ban-modal" class="modal-overlay hidden">
+        <div class="modal-box">
+          <div class="modal-header">
+            <div class="modal-title">banir usuario</div>
+            <button class="modal-close" id="ban-close">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+          </div>
+          <div id="ban-content" style="padding: 16px;">
+            <p id="ban-username" style="margin-bottom: 12px; color: var(--text); font-weight: 500;"></p>
+            <div class="login-field">
+              <label class="login-label">motivo do ban</label>
+              <textarea id="ban-reason" class="login-input" placeholder="ex: quebrar as regras do site, spam, etc..." style="min-height: 80px; font-family: inherit; resize: vertical;"></textarea>
+            </div>
+          </div>
+          <div style="display: flex; gap: 8px; padding: 16px; border-top: 1px solid var(--border);">
+            <button type="button" class="btn-ghost" id="ban-cancel">cancelar</button>
+            <button type="button" class="login-btn" id="ban-confirm" style="flex: 1; background: var(--red);">confirmar ban</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Delete Account Modal -->
+      <div id="delete-account-modal" class="modal-overlay hidden">
+        <div class="modal-box">
+          <div class="modal-header">
+            <div class="modal-title">deletar conta</div>
+            <button class="modal-close" id="delete-account-close">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+          </div>
+          <div style="padding: 16px; background: var(--red-bg); border: 1px solid var(--red-border); border-radius: 8px; margin: 16px;">
+            <div style="display: flex; gap: 12px; margin-bottom: 12px;">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color: var(--red); flex-shrink: 0; margin-top: 2px;"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3.05h16.94a2 2 0 0 0 1.71-3.05L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+              <div>
+                <h4 style="color: var(--text); font-weight: 600; margin-bottom: 4px;">Tem certeza?</h4>
+                <p style="color: var(--text-2); font-size: 13px; line-height: 1.5;">Esta ação é <strong>irreversível</strong>. Todos os seus dados, tarefas, notas e histórico serão <strong>permanentemente deletados</strong> e não poderão ser recuperados.</p>
+              </div>
+            </div>
+            <div style="margin-top: 12px;">
+              <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 8px;">Para confirmar, digite seu usuário abaixo:</p>
+              <input type="text" id="delete-username-confirm" class="login-input" placeholder="seu usuário" style="margin-bottom: 12px;" />
+            </div>
+          </div>
+          <div style="display: flex; gap: 8px; padding: 16px; border-top: 1px solid var(--border);">
+            <button type="button" class="btn-ghost" id="delete-account-cancel">cancelar</button>
+            <button type="button" class="login-btn" id="delete-account-confirm" style="flex: 1; background: var(--red);" disabled>deletar permanentemente</button>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+  <script>
+    // ── QR Code Mobile ──────────────────────────────────────────────
+    function getMobileLink() {
+      let protocol = window.location.protocol;
+      let host = window.location.hostname;
+      let port = window.location.port;
+      
+      // Se for localhost, não funciona no celular
+      // Detectar IP real
+      if (host === 'localhost' || host === '127.0.0.1') {
+        // Usar IP da máquina (será 192.168.0.7)
+        // A URL precisa ser acessível do celular
+        host = '192.168.0.7';
+      }
+      
+      const portStr = (port === '80' || port === '443' || !port) ? '' : ':' + port;
+      return `${protocol}//${host}${portStr}/mobile_app.html`;
+    }
+
+    function generateMobileQRCode() {
+      const mobileLink = getMobileLink();
+      
+      // Atualizar exibição do link imediatamente
+      const linkDisplay = document.getElementById('mobile-link-display');
+      if (linkDisplay) {
+        linkDisplay.textContent = mobileLink;
+      }
+      
+      // Gerar QR Code
+      const qrContainer = document.getElementById('qr-container');
+      if (qrContainer) {
+        // Limpar QR anterior
+        qrContainer.innerHTML = '';
+        
+        // Verificar se QRCode está disponível
+        if (typeof QRCode !== 'undefined') {
+          new QRCode(qrContainer, {
+            text: mobileLink,
+            width: 250,
+            height: 250,
+            colorDark: '#50d71e',
+            colorLight: '#ffffff',
+            correctLevel: QRCode.CorrectLevel.H
+          });
+        } else {
+          // Se a biblioteca não estiver carregada, tentar novamente
+          setTimeout(generateMobileQRCode, 100);
+        }
+      }
+    }
+
+    function copyMobileLink() {
+      const link = getMobileLink();
+      navigator.clipboard.writeText(link).then(() => {
+        alert('✓ Link copiado para a área de transferência!');
+      }).catch(() => {
+        alert('Erro ao copiar o link');
+      });
+    }
+
+    function downloadQRCode() {
+      const canvas = document.querySelector('#qr-container canvas');
+      if (!canvas) {
+        alert('QR Code ainda está sendo gerado. Tente novamente em alguns segundos.');
+        return;
+      }
+      
+      const link = document.createElement('a');
+      link.href = canvas.toDataURL('image/png');
+      link.download = 'aphaday-mobile-qrcode.png';
+      link.click();
+    }
+
+    // Gerar QR Code quando o DOM estiver pronto
+    document.addEventListener('DOMContentLoaded', () => {
+      generateMobileQRCode();
+
+      // Gerar novamente quando trocar para a página de QR
+      const pageQRMobile = document.getElementById('page-qr-mobile');
+      if (pageQRMobile) {
+        const observer = new MutationObserver(() => {
+          if (pageQRMobile.classList.contains('active')) {
+            generateMobileQRCode();
+          }
+        });
+
+        observer.observe(pageQRMobile, {
+          attributes: true,
+          attributeFilter: ['class']
+        });
+      }
+    });
+
+    // Gerar novamente quando a página carrega completamente
+    window.addEventListener('load', generateMobileQRCode);
+  </script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function() {
+        navigator.serviceWorker.register('./sw.js');
+      });
+    }
+  </script>
+</body>
+</html>

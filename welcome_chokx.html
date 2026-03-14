@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bem-vindo CHOKX</title>
+    <style>
+        /* Estilos do Site Principal (Simulação) */
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #121212;
+            color: white;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* --- ESTILOS DA TELA DE BOAS-VINDAS --- */
+        #welcome-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #000000;
+            z-index: 9999; /* Garante que fique acima de tudo */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            transition: opacity 1s ease-out, visibility 1s ease-out;
+        }
+
+        .welcome-text {
+            font-size: 3rem;
+            font-weight: bold;
+            color: #fff;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.8s forwards;
+        }
+
+        .welcome-name {
+            color: #00ff88; /* Verde Neon estilo Aphaday */
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            animation: glowPulse 1.5s ease-in-out infinite;
+        }
+
+        .loading-bar {
+            width: 0%;
+            height: 4px;
+            background-color: #00ff88;
+            margin-top: 20px;
+            border-radius: 2px;
+            animation: loadBar 2s ease-in-out forwards;
+        }
+
+        .audio-icon {
+            font-size: 2rem;
+            margin-top: 20px;
+            opacity: 0;
+            animation: fadeInUp 0.8s forwards 0.3s;
+        }
+
+        .audio-icon.playing {
+            animation: pulse 0.6s ease-in-out infinite;
+        }
+
+        /* Animações */
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes loadBar {
+            0% { width: 0%; }
+            50% { width: 60%; }
+            100% { width: 200px; } /* Largura final da barra */
+        }
+
+        @keyframes glowPulse {
+            0%, 100% { text-shadow: 0 0 10px #00ff88; }
+            50% { text-shadow: 0 0 20px #00ff88, 0 0 30px #00ff88; }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.1); opacity: 0.7; }
+        }
+
+        /* Classe para esconder a tela */
+        .hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- TELA DE BOAS-VINDAS -->
+    <div id="welcome-overlay">
+        <div class="welcome-text">
+            Olá, <span class="welcome-name">CHOKX</span>
+        </div>
+        <div class="loading-bar"></div>
+        <div class="audio-icon" id="audioIcon">🔊</div>
+    </div>
+
+    <!-- CONTEÚDO DO SITE (O que aparece depois) -->
+    <div id="app-content">
+        <h1>Aphaday 2.0</h1>
+        <p>Sistema carregado com sucesso.</p>
+    </div>
+
+    <script>
+        // Função para fazer o navegador falar o nome CHOKX
+        function speakName() {
+            const audioIcon = document.getElementById('audioIcon');
+            const utterance = new SpeechSynthesisUtterance('CHOKX');
+            
+            // Configurações de voz
+            utterance.lang = 'pt-BR'; // Português Brasileiro
+            utterance.rate = 0.8; // Velocidade um pouco mais lenta para clareza
+            utterance.pitch = 1; // Tom normal
+            utterance.volume = 1; // Volume máximo
+            
+            // Adicionar classe de animação quando começar a falar
+            utterance.onstart = () => {
+                audioIcon.classList.add('playing');
+            };
+            
+            // Remover classe quando terminar de falar
+            utterance.onend = () => {
+                audioIcon.classList.remove('playing');
+            };
+            
+            // Executar a síntese de fala
+            window.speechSynthesis.speak(utterance);
+        }
+
+        // Script para remover a tela de boas-vindas
+        window.addEventListener('load', () => {
+            const overlay = document.getElementById('welcome-overlay');
+            
+            // Espera 2.5 segundos (tempo da animação) e depois some
+            setTimeout(() => {
+                overlay.classList.add('hidden');
+            }, 2500);
+        });
+    </script>
+</body>
+</html>

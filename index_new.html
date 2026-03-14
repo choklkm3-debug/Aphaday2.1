@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Aphaday</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+
+  <!-- Login Screen -->
+  <div id="login-screen">
+    <div class="login-box">
+      <div class="login-logo">
+        <div class="logo-icon" style="width:40px;height:40px;border-radius:12px">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+        </div>
+        <div>
+          <div class="login-title">Aphaday</div>
+          <div class="login-sub">acesso privado</div>
+        </div>
+      </div>
+
+      <form id="login-form">
+        <div class="login-field">
+          <label class="login-label">usuario</label>
+          <input type="text" id="login-user" class="login-input" placeholder="seu usuario" />
+        </div>
+        <div class="login-field">
+          <label class="login-label">senha</label>
+          <input type="password" id="login-pass" class="login-input" placeholder="sua senha" />
+        </div>
+        <div class="login-error" id="login-error"></div>
+        <button type="submit" class="login-btn">entrar</button>
+      </form>
+
+      <div style="text-align: center; padding: 16px 0; border-top: 1px solid var(--border); margin-top: 16px;">
+        <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 12px;">nao tem conta?</p>
+        <button type="button" class="login-btn" id="register-btn" style="background: var(--green);">registrar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Register Modal -->
+  <div id="register-overlay" class="modal-overlay hidden">
+    <div class="modal-box">
+      <div class="modal-header">
+        <div class="modal-title">criar nova conta</div>
+        <button class="modal-close" id="register-close">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <form id="register-form">
+        <div class="login-field">
+          <label class="login-label">usuario</label>
+          <input type="text" id="reg-user" class="login-input" placeholder="seu usuario" />
+        </div>
+        <div class="login-field">
+          <label class="login-label">senha</label>
+          <input type="password" id="reg-pass" class="login-input" placeholder="minimo 4 caracteres" />
+        </div>
+        <div class="login-field">
+          <label class="login-label">confirmar senha</label>
+          <input type="password" id="reg-pass2" class="login-input" placeholder="repita a senha" />
+        </div>
+        <div class="login-error" id="register-error"></div>
+        <div class="modal-actions">
+          <button type="button" class="btn-ghost" id="register-cancel">cancelar</button>
+          <button type="submit" class="login-btn" style="flex:1">registrar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Main App -->
+  <div id="app" class="hidden">
+    <aside class="sidebar">
+      <div class="logo">
+        <div class="logo-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+        </div>
+        <span class="logo-text">Aphaday</span>
+      </div>
+
+      <div class="nav-section-label">menu</div>
+      <nav>
+        <button class="nav-btn active" data-page="overview">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+          <span>visao geral</span>
+        </button>
+        <button class="nav-btn" data-page="tasks">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+          <span>tarefas</span>
+        </button>
+        <button class="nav-btn" data-page="finance">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+          <span>financas</span>
+        </button>
+        <button class="nav-btn" data-page="notes">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+          <span>notas</span>
+        </button>
+        <button class="nav-btn" data-page="support">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+          <span>suporte</span>
+        </button>
+        <button class="nav-btn" data-page="profile">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          <span>perfil</span>
+        </button>
+      </nav>
+
+      <div class="sidebar-bottom">
+        <button class="theme-btn logout-btn" id="logout-btn">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          <span>sair</span>
+        </button>
+      </div>
+    </aside>
+
+    <main class="content">
+      <!-- Overview Page -->
+      <section class="page active" id="page-overview">
+        <div class="page-header">
+          <h1 class="page-title">visao geral</h1>
+        </div>
+        <p style="color: var(--text-muted);">Bem-vindo ao Aphaday!</p>
+      </section>
+
+      <!-- Tasks Page -->
+      <section class="page" id="page-tasks">
+        <div class="page-header">
+          <h1 class="page-title">tarefas</h1>
+        </div>
+        <p style="color: var(--text-muted);">Seção de tarefas</p>
+      </section>
+
+      <!-- Finance Page -->
+      <section class="page" id="page-finance">
+        <div class="page-header">
+          <h1 class="page-title">financas</h1>
+        </div>
+        <p style="color: var(--text-muted);">Seção de finanças</p>
+      </section>
+
+      <!-- Notes Page -->
+      <section class="page" id="page-notes">
+        <div class="page-header">
+          <h1 class="page-title">notas</h1>
+        </div>
+        <p style="color: var(--text-muted);">Seção de notas</p>
+      </section>
+
+      <!-- Support Page -->
+      <section class="page" id="page-support">
+        <div class="page-header">
+          <h1 class="page-title">suporte</h1>
+          <div class="page-subtitle">tire suas duvidas</div>
+        </div>
+        <div style="flex:1; display:flex; flex-direction:column; overflow:hidden;">
+          <iframe src="suporte.html" style="flex:1; width:100%; border:none;"></iframe>
+        </div>
+      </section>
+
+      <!-- Profile Page -->
+      <section class="page" id="page-profile">
+        <div class="page-header">
+          <h1 class="page-title">perfil</h1>
+        </div>
+        <p style="color: var(--text-muted);">Seção de perfil - usuario: <strong id="profile-username">--</strong></p>
+      </section>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

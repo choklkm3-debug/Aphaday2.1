@@ -1,0 +1,16 @@
+{
+  "name": "aphaday",
+  "version": "2.1.0",
+  "description": "Aphaday - Gestor de tarefas pessoal com sync PC/Mobile",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "keywords": ["app", "tarefas", "finanças", "notas"],
+  "author": "Chok",
+  "license": "MIT",
+  "engines": {
+    "node": "18.x"
+  }
+}

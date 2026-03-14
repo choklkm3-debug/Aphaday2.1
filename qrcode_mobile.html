@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Aphaday - QR Code Mobile</title>
+  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0a0a0b;
+      --surface: #141416;
+      --surface-2: #1a1a1d;
+      --border: #2d2d31;
+      --text: #f5f5f7;
+      --text-muted: #61616b;
+      --green: #50d71e;
+      --blue: #0a84ff;
+      --shadow: 0 8px 24px rgba(0,0,0,.25);
+      --radius: 14px;
+      --transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, #0a0a0b 0%, #1a1a1d 50%, #0a0a0b 100%);
+      color: var(--text);
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Inter', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    .container {
+      max-width: 500px;
+      width: 100%;
+    }
+
+    .card {
+      background: linear-gradient(135deg, var(--surface) 0%, var(--surface-2) 100%);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 40px;
+      box-shadow: var(--shadow);
+      text-align: center;
+    }
+
+    .logo {
+      width: 48px;
+      height: 48px;
+      background: linear-gradient(135deg, var(--green) 0%, var(--blue) 100%);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 24px;
+      font-size: 24px;
+      font-weight: bold;
+      box-shadow: 0 8px 24px rgba(80, 215, 30, 0.3);
+    }
+
+    h1 {
+      font-size: 28px;
+      font-weight: 800;
+      letter-spacing: -0.6px;
+      margin-bottom: 8px;
+      background: linear-gradient(135deg, var(--green) 0%, var(--blue) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .subtitle {
+      font-size: 14px;
+      color: var(--text-muted);
+      margin-bottom: 32px;
+    }
+
+    #qrcode {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 32px;
+    }
+
+    #qrcode canvas {
+      border-radius: var(--radius);
+      border: 2px solid var(--border);
+      padding: 16px;
+      background: #ffffff;
+    }
+
+    .link-section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px;
+      margin-bottom: 24px;
+    }
+
+    .link-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin-bottom: 8px;
+    }
+
+    .link-text {
+      font-size: 13px;
+      color: var(--green);
+      font-weight: 600;
+      word-break: break-all;
+      font-family: 'Monaco', 'Courier New', monospace;
+    }
+
+    .steps {
+      text-align: left;
+      margin-bottom: 24px;
+    }
+
+    .step {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      margin-bottom: 16px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .step:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .step-num {
+      width: 32px;
+      height: 32px;
+      min-width: 32px;
+      background: linear-gradient(135deg, var(--green) 0%, var(--blue) 100%);
+      color: #ffffff;
+      border-radius: 50%;
+      font-size: 14px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 2px;
+    }
+
+    .step-text {
+      font-size: 14px;
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    .step-title {
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .button-group {
+      display: flex;
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    .btn {
+      flex: 1;
+      padding: 14px;
+      border: none;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all var(--transition);
+      font-family: inherit;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--green) 0%, #34c759 100%);
+      color: #ffffff;
+      box-shadow: 0 4px 12px rgba(80, 215, 30, 0.3);
+    }
+
+    .btn-primary:active {
+      transform: scale(0.98);
+      box-shadow: 0 6px 20px rgba(80, 215, 30, 0.4);
+    }
+
+    .btn-secondary {
+      background: var(--surface-2);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    .btn-secondary:active {
+      background: var(--border);
+    }
+
+    .info-box {
+      background: rgba(80, 215, 30, 0.08);
+      border: 1px solid rgba(80, 215, 30, 0.2);
+      border-radius: 10px;
+      padding: 16px;
+      margin-top: 24px;
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    .info-box strong {
+      color: var(--green);
+    }
+
+    @media (max-width: 480px) {
+      .card {
+        padding: 24px;
+      }
+
+      h1 {
+        font-size: 24px;
+      }
+
+      #qrcode canvas {
+        padding: 12px;
+      }
+
+      .button-group {
+        flex-direction: column;
+      }
+    }
+
+    .copy-feedback {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: var(--green);
+      color: #ffffff;
+      padding: 12px 20px;
+      border-radius: 8px;
+      font-weight: 700;
+      opacity: 0;
+      transform: translateY(-20px);
+      transition: all 0.3s ease;
+      pointer-events: none;
+    }
+
+    .copy-feedback.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="card">
+      <!-- Logo -->
+      <div class="logo">A</div>
+
+      <!-- Title -->
+      <h1>Aphaday Mobile</h1>
+      <p class="subtitle">Acesse o app no seu celular com este QR Code</p>
+
+      <!-- QR Code -->
+      <div id="qrcode"></div>
+
+      <!-- Link -->
+      <div class="link-section">
+        <div class="link-label">Link para acessar:</div>
+        <div class="link-text" id="qr-link">Gerando...</div>
+      </div>
+
+      <!-- Steps -->
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-text">
+            <div class="step-title">Conecte seu celular</div>
+            Na mesma rede Wi-Fi do computador
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-text">
+            <div class="step-title">Abra a câmera</div>
+            Aponte para o QR Code acima
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-text">
+            <div class="step-title">Acesse o app</div>
+            Toque no link que aparecer na câmera
+          </div>
+        </div>
+      </div>
+
+      <!-- Buttons -->
+      <div class="button-group">
+        <button class="btn btn-primary" onclick="copyLink()">
+          📋 Copiar Link
+        </button>
+        <button class="btn btn-secondary" onclick="downloadQR()">
+          ⬇️ Baixar QR
+        </button>
+      </div>
+
+      <!-- Info -->
+      <div class="info-box">
+        ℹ️ <strong>Dica:</strong> Se você for o proprietário, pode compartilhar este link com outras pessoas para que consigam acessar o app no celular delas também!
+      </div>
+    </div>
+  </div>
+
+  <div class="copy-feedback" id="feedback"></div>
+
+  <script>
+    // Determinar IP local
+    function getLocalIP() {
+      return window.location.hostname;
+    }
+
+    function getPort() {
+      return window.location.port || (window.location.protocol === 'https:' ? '443' : '80');
+    }
+
+    function generateLink() {
+      const protocol = window.location.protocol;
+      const host = getLocalIP();
+      const port = getPort();
+      const portStr = (port === '80' || port === '443') ? '' : ':' + port;
+      return `${protocol}//${host}${portStr}/mobile_app.html`;
+    }
+
+    // Gerar QR Code
+    function generateQR() {
+      const link = generateLink();
+      document.getElementById('qr-link').textContent = link;
+
+      // Limpar QR anterior
+      const qrContainer = document.getElementById('qrcode');
+      qrContainer.innerHTML = '';
+
+      // Gerar novo QR
+      new QRCode(qrContainer, {
+        text: link,
+        width: 300,
+        height: 300,
+        colorDark: '#000000',
+        colorLight: '#ffffff',
+        correctLevel: QRCode.CorrectLevel.H
+      });
+    }
+
+    function copyLink() {
+      const link = document.getElementById('qr-link').textContent;
+      navigator.clipboard.writeText(link).then(() => {
+        showFeedback('✓ Link copiado!');
+      }).catch(() => {
+        showFeedback('Erro ao copiar');
+      });
+    }
+
+    function downloadQR() {
+      const canvas = document.querySelector('#qrcode canvas');
+      const link = document.createElement('a');
+      link.href = canvas.toDataURL('image/png');
+      link.download = 'aphaday-qrcode.png';
+      link.click();
+      showFeedback('✓ QR Code baixado!');
+    }
+
+    function showFeedback(msg) {
+      const feedback = document.getElementById('feedback');
+      feedback.textContent = msg;
+      feedback.classList.add('show');
+      setTimeout(() => {
+        feedback.classList.remove('show');
+      }, 2000);
+    }
+
+    // Gerar QR ao carregar
+    window.addEventListener('load', generateQR);
+  </script>
+</body>
+</html>
