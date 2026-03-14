@@ -31,11 +31,6 @@ Aphaday é um gestor pessoal completo para tarefas, finanças e notas, com sincr
 - **📋 Logs do Sistema**: Histórico detalhado de todas as atividades
 - **⚙️ Configurações**: Modo manutenção, backups automáticos
 
-**Como acessar:**
-1. Faça login como administrador (usuário: `Chok`)
-2. Clique em "Painel Admin" na navegação
-3. Ou acesse diretamente: `http://localhost:8000/admin.html`
-
 To use a custom logo image for the site, save your image file in the `icons` folder as `logo.png`. The application uses this file in the sidebar and login screen. For best results, make sure the image is square; the code will resize it to fit 16×16 or 40×40 pixels.
 
 If you want the Progressive Web App icons (in `manifest.json`) to match the new logo, replace `icons/icon-192.png` and `icons/icon-512.png` with 192×192 and 512×512 versions of your logo. Keep the same filenames or update the manifest accordingly.
